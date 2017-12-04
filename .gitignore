@@ -1,0 +1,9 @@
+﻿.idea
+.svn
+.sass-cache
+*.iml
+*.zip
+
+/bower_components/*
+/node_modules/*
+!/node_modules/modelproxy/
