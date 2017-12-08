@@ -2,5 +2,5 @@
 
 /**
  * @fileOverview koa-ice
- * @author sheny@made-in-china.com
+ * @author oneroundseven@gmail.com
  */

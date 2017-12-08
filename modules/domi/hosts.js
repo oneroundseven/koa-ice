@@ -5,13 +5,3 @@
  * @author oneroundseven@gmail.com
  */
 
-
-
-let blacklist = ()=> {
-    return async (ctx, next)=> {
-
-        await next();
-    }
-};
-
-module.exports = blacklist;

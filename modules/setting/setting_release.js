@@ -9,7 +9,7 @@ module.exports = {
         host : 'mail3.focuschina.com', // default : 127.0.0.1
         port : null, // default : 25
         auth: {
-            user: 'sheny@made-in-china.com',
+            user: 'oneroundseven@gmail.com',
             pass: '15531685'
         }
     }
