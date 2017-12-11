@@ -18,6 +18,8 @@ function domiAction() {
         let result = match(myURL.host, myURL.path);
 
         logger.info(ctx.request.ip + ':' + ctx.req.url);
+        logger.error('error');
+        logger.warn('warn');
 
         if (staticMIME.indexOf(ext) === -1 && result) {
             // domi action domi(result)

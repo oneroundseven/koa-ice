@@ -14,8 +14,9 @@ const pretty = pino.pretty();
  * server: 启动日志
  * visiting: 访问日志
  * static: 静态资源访问日志
+ * error: 错误及警告日志
  */
-const LOG_TYPE = ['server', 'visiting', 'static'];
+const LOG_TYPE = ['server', 'visiting', 'static', 'error'];
 
 pretty.pipe(process.stdout);
 
@@ -36,14 +37,25 @@ LOG_TYPE.map((item, index)=> {
     }
 });
 
+let mode = global.mode;
+function devLog() {
+    if (mode == 'dev') {
+        console.log()
+    }
+
+}
+
 module.exports = {
-    info: (msg)=> {
+    info: (msg, file)=> {
         logger.info(msg);
+        devLog(msg);
     },
-    error: (msg)=> {
-        logger.warn(msg);
+    error: (msg, file)=> {
+        logger.error(msg);
+        devLog(msg);
     },
-    warn: (msg)=> {
+    warn: (msg, file)=> {
         logger.warn(msg);
+        devLog(msg);
     }
 };
