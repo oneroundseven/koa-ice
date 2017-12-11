@@ -5,12 +5,12 @@ const onerror = require('koa-onerror')
 const setting = require('./modules/setting');
 const logger = require('./modules/logger');
 const blacklist = require('./modules/blacklist');
-const staticFilter = require('./modules/staticFilter');
+const domi = require('./modules/domi');
 
 // error handler
 onerror(app);
 app.use(blacklist());
-app.use(staticFilter());
+app.use(domi());
 // static router
 app.use(require('koa-static')(setting.staticPath));
 

@@ -21,6 +21,7 @@ program
 
 if (program.dev)  {
     setting = setting_dev;
+    global.mode = 'dev';
 }
 if (program.test) {
     setting = setting_test;

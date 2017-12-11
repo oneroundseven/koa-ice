@@ -5,24 +5,41 @@
  * @author oneroundseven@gmail.com
  */
 
-const views = require('koa-views');
-const json = require('koa-json');
-const bodyparser = require('koa-bodyparser');
-
-const index = require('./routes/index');
-const users = require('./routes/users');
+const hosts = require('./hosts');
+const logger = require('../logger');
 
 
-// middlewares
-app.use(bodyparser({
-    enableTypes:['json', 'form', 'text']
-}));
-app.use(json());
+//const domi = require('domi');
 
-app.use(views(__dirname + '/views', {
-    extension: 'pug'
-}))
+let path = require('path');
 
-// routes
-app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+let staticMIME = ['css', 'js', 'gif', 'png', 'html', 'jpeg', 'jpg', 'json', 'pdf', 'swf', 'txt', 'wav', 'wma', 'wmv', 'xml', 'woff', 'ttf', 'svg', 'eot', 'ico'];
+
+let ext;
+
+function domiAction() {
+    return async (ctx, next)=> {
+        ext = path.extname(ctx.req.url).substring(1);
+        logger.visit(ctx.request.ip + ':' + ctx.req.url);
+
+        if (staticMIME.indexOf(ext) === -1 && hosts(ctx.request.href)) {
+            // domi action
+            await asynTest(ctx);
+        } else {
+            await next();
+        }
+    }
+}
+
+function asynTest(ctx) {
+
+    return new Promise((resolve, reject) => {
+        setTimeout(function() {
+            ctx.body = 'hello world';
+            console.log('success');
+            resolve();
+        }, 3000);
+    });
+}
+
+module.exports = domiAction;
