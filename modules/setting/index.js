@@ -7,10 +7,32 @@
  */
 
 const program = require('commander');
-const setting_dev = require('./setting_dev');
-const setting_release = require('./setting_release');
-const setting_test = require('./setting_test');
-let setting = setting_dev;
+const path = require('path');
+const fs = require('fs');
+
+let setting_dir = __dirname;
+let setting = {
+    dev: null,
+    release: null,
+    test: null
+};
+
+// pre set setting
+for (let cmd in setting) {
+    setting[cmd] = require(setting_dir + '/setting_' + cmd + '.js');
+}
+
+// override default setting
+let run_dir = process.cwd();
+if (fs.existsSync(path.resolve(run_dir + '/config'))) {
+    let setting_path;
+    for (let cmd in setting) {
+        setting_path = path.resolve(run_dir + '/config/setting_' + cmd + '.js');
+        if (fs.existsSync(setting_path)) {
+            setting[cmd] = require(setting_path);
+        }
+    }
+}
 
 program
     .version('0.1.0')
@@ -20,14 +42,14 @@ program
     .parse(process.argv);
 
 if (program.dev)  {
-    setting = setting_dev;
+    setting = setting.dev;
     global.mode = 'dev';
 }
 if (program.test) {
-    setting = setting_test;
+    setting = setting.test;
 }
 if (program.release) {
-    setting = setting_release;
+    setting = setting.release;
 }
 
 module.exports = setting;
