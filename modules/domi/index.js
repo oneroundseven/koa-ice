@@ -15,22 +15,25 @@ function domiAction() {
     return async (ctx, next)=> {
         let ext = path.extname(ctx.req.url).substring(1);
         let myURL = new URL(ctx.request.href);
-        let result = match(myURL.host, myURL.path);
+        let result = match(myURL.hostname, myURL.pathname);
 
         logger.info(ctx.request.ip + ':' + ctx.req.url);
-        logger.error('error');
-        logger.warn('warn');
 
         if (staticMIME.indexOf(ext) === -1 && result) {
             // domi action domi(result)
-            await asynTest(ctx);
+            try {
+                await asynTest(ctx);
+            } catch (err) {
+                logger.error(err);
+                await next();
+            }
         } else {
             await next();
         }
     }
 }
 
-function match(domain, path) {
+function match(domain, pathname) {
     let matchPath;
     let result;
     let app;
@@ -39,16 +42,20 @@ function match(domain, path) {
         return result;
     }
 
-    for (var i = 0; i < proxy.length; i++) {
-        app = proxy[i];
+    try {
+        for (var i = 0; i < proxy.length; i++) {
+            app = proxy[i];
 
-        if (app.domain === domain && app.filter) {
-            matchPath = path.match(new RegExp(app.filter));
-            if (matchPath) {
-                result = proxy[i];
-                break;
+            if (app.domain === domain && app.pathFilter) {
+                matchPath = pathname.match(new RegExp(app.pathFilter));
+                if (matchPath) {
+                    result = proxy[i];
+                    break;
+                }
             }
         }
+    } catch (err) {
+        logger.error(err);
     }
 
     return result;
@@ -59,7 +66,7 @@ function asynTest(ctx) {
     return new Promise((resolve, reject) => {
         setTimeout(function() {
             ctx.body = 'hello world';
-            console.log('success');
+            logger.info('success');
             resolve();
         }, 3000);
     });
