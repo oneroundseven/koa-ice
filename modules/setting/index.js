@@ -41,16 +41,18 @@ program
     .option('-r, --release', 'prod env')
     .parse(process.argv);
 
+let setting_default = setting.dev;
+
 if (program.dev)  {
-    setting = setting.dev;
+    setting_default = setting.dev;
     global.mode = 'dev';
 }
 if (program.test) {
-    setting = setting.test;
+    setting_default = setting.test;
 }
 if (program.release) {
-    setting = setting.release;
+    setting_default = setting.release;
 }
 
-module.exports = setting;
+module.exports = setting_default;
 
