@@ -10,7 +10,6 @@ const program = require('commander');
 const path = require('path');
 const fs = require('fs');
 
-let setting_dir = __dirname;
 let setting = {
     dev: null,
     release: null,
@@ -19,7 +18,7 @@ let setting = {
 
 // pre set setting
 for (let cmd in setting) {
-    setting[cmd] = require(setting_dir + '/setting_' + cmd + '.js');
+    setting[cmd] = require('./setting_' + cmd + '.js');
 }
 
 // override default setting

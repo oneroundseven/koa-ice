@@ -6,6 +6,7 @@
  */
 
 let black_ips = require('../../blacklist');
+const logger = require('../logger');
 
 function blackList() {
     return async (ctx, next)=> {
@@ -27,6 +28,7 @@ function blackList() {
                 if (ip === black_ips[i]) {
                     ctx.status = 403;
                     ctx.body = 'No Permision';
+                    logger.warn('IP reject:'+ ip);
                     return;
                 } else {
 
@@ -42,6 +44,7 @@ function blackList() {
                             if (ip.join('.') === tmp.join('.')) {
                                 ctx.status = 403;
                                 ctx.body = 'No Permision';
+                                logger.warn('IP reject:'+ ip);
                                 return;
                             }
                         }

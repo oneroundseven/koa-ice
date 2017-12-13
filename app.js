@@ -5,26 +5,26 @@ const onerror = require('koa-onerror')
 const setting = require('./modules/setting');
 const logger = require('./modules/logger');
 const blacklist = require('./modules/blacklist');
+const staticFilter = require('./modules/staticFilter');
 const domi = require('./modules/domi');
+const staticCache = require('koa-static-cache')
 
 // error handler
 onerror(app);
 app.use(blacklist());
-app.use(domi());
+// static middle
+app.use(staticFilter());
 // static router
-app.use(require('koa-static')(setting.staticPath));
+app.use(staticCache(setting.staticPath, {
+    maxAge: 365 * 24 * 60 * 60
+}));
+// domi middle
+app.use(domi());
 
-// logger
-/*app.use(async (ctx, next) => {
-  const start = new Date()
-  await next()
-  const ms = new Date() - start
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-});*/
 
 // error-handling
 app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx)
+  logger.error('server error', err, ctx)
 });
 
 module.exports = app;
