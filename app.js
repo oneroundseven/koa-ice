@@ -6,7 +6,7 @@ const setting = require('./modules/setting');
 const logger = require('./modules/logger');
 const blacklist = require('./modules/blacklist');
 const staticFilter = require('./modules/staticFilter');
-const domi = require('./modules/domi');
+const domi = require('nview-domi');
 const staticCache = require('koa-static-cache')
 
 // error handler
@@ -19,8 +19,11 @@ app.use(staticCache(setting.staticPath, {
     maxAge: 365 * 24 * 60 * 60
 }));
 // domi middle
-app.use(domi());
-
+try {
+    app.use(domi.middleware);
+} catch (err) {
+    throw new Error('domi init error');
+}
 
 // error-handling
 app.on('error', (err, ctx) => {

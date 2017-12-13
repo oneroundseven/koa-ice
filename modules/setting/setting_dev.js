@@ -8,10 +8,9 @@ module.exports = {
     // 本地模拟数据映射
     proxy: [
         {
-            name: 'mic-search',
-            domain: 'www.made-in-china.com',
-            pathFilter: '^/prod',
-            api: '',
+            name: 'channelfy',
+            domain: 'www.channelfy-fy.com',
+            api: 'E:\\Project\\koa-ice\\mic\\channelfy\\api',
             view: ''
         },
         {

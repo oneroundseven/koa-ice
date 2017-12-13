@@ -45,10 +45,15 @@ function match(domain, pathname) {
         for (var i = 0; i < proxy.length; i++) {
             app = proxy[i];
 
-            if (app.domain === domain && app.pathFilter) {
-                matchPath = pathname.match(new RegExp(app.pathFilter));
-                if (matchPath) {
-                    result = proxy[i];
+            if (app.domain === domain) {
+                if (app.pathFilter) {
+                    matchPath = pathname.match(new RegExp(app.pathFilter));
+                    if (matchPath) {
+                        result = app;
+                        break;
+                    }
+                } else {
+                    result = app;
                     break;
                 }
             }
