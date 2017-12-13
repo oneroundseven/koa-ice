@@ -18,9 +18,11 @@ app.use(staticFilter());
 app.use(staticCache(setting.staticPath, {
     maxAge: 365 * 24 * 60 * 60
 }));
-// domi middle
+// domi middle wave
 try {
-    app.use(domi.middleware);
+    if (domi) {
+        app.use(domi.middleware);
+    }
 } catch (err) {
     throw new Error('domi init error');
 }
