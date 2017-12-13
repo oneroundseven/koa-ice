@@ -24,7 +24,7 @@
     "koa-static": "^4.0.2",
     "koa-static-cache": "^5.1.1",
     "koa-views": "^5.2.1",
-    "nview-domi": "0.0.5",
+    "nview-domi": "0.0.6",
     "pino": "^4.10.2",
     "pug": "^2.0.0-rc.1"
   }

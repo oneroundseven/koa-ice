@@ -10,7 +10,7 @@ module.exports = {
         {
             name: 'channelfy',
             domain: 'www.channelfy-fy.com',
-            api: 'E:\\Project\\koa-ice\\mic\\channelfy',
+            api: 'E:\\Project\\nview-ice\\mic\\channelfy',
             view: ''
         },
         {

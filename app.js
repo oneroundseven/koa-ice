@@ -31,7 +31,7 @@ if (staticPath) {
 try {
     if (domi) {
         app.use(domiLogger());
-        //app.use(domi.middleware);
+        app.use(domi.middleware);
     }
 } catch (err) {
     throw new Error('domi exec error');
