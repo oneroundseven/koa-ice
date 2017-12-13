@@ -55,7 +55,7 @@ LOG_TYPE.map((item, index)=> {
         fs.openSync(logPath + '/' + item + '.log', 'w');
     }
 
-    loggerAppender[item] = pino({
+    loggerAppender[item] = new pino({
         name: logName,
         safe: true
     }, pretty.pipe(fs.createWriteStream(logPath + '/' + item +'.log')));

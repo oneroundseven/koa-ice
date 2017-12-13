@@ -9,19 +9,9 @@ const logger = require('../logger');
 
 function domiAction() {
     return async (ctx, next)=> {
-        await asynTest(ctx);
+        await next();
         logger.info(visitLogFormat(ctx.request, ctx.response));
     }
-}
-
-function asynTest(ctx) {
-    return new Promise((resolve, reject) => {
-        setTimeout(function() {
-            ctx.body = 'hello domi';
-            logger.info(ctx.domi);
-            resolve();
-        }, 3000);
-    });
 }
 
 function visitLogFormat(koaRequest, koaResponse) {

@@ -28,7 +28,9 @@ function formatDate(fmt, dateStr) {
     return tmp;
 }
 
+function visitLogFormat(koaRequest, koaResponse, type) {
+    return '['+ process.id +']'+ type +':'+ koaRequest.method + ' ' + koaResponse.status + ' ' + koaRequest.href + ' ' + koaRequest.headers['user-agent'];
+}
 
-module.exports = {
-    formatDate: formatDate
-};
+module.exports.formatDate = formatDate;
+module.exports.visitLogFormat = visitLogFormat;
