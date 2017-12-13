@@ -16,10 +16,10 @@ const setting = require('../setting');
  * error: 错误及警告日志
  */
 const LOG_TYPE = ['server', 'visiting', 'error'];
-
+let noop = function() {};
 let logName = 'koa-ice';
 
-const pretty = pino.pretty({
+let pretty = pino.pretty({
     crlf: true,
     formatter: (ori, preFunction)=> {
         let line = '[';
@@ -31,17 +31,16 @@ const pretty = pino.pretty({
     }
 });
 
-pretty.pipe(process.stdout);
 const consoleAppender = pino({
     name: logName,
     safe: true,
-}, pretty);
+}, pretty.pipe(process.stdout));
 
 let logPath = process.cwd() + setting.logPath;
 let loggerAppender = {
-    visiting: null,
-    error: null,
-    server: null
+    visiting: noop,
+    error: noop,
+    server: noop
 };
 
 // create path
@@ -55,10 +54,10 @@ LOG_TYPE.map((item, index)=> {
         fs.openSync(logPath + '/' + item + '.log', 'w');
     }
 
-    loggerAppender[item] = new pino({
+    loggerAppender[item] = pino({
         name: logName,
         safe: true
-    }, pretty.pipe(fs.createWriteStream(logPath + '/' + item +'.log')));
+    }, pretty.pipe(fs.createWriteStream(logPath + '/' + item +'.log')))[item === 'error' ? 'error' : 'info'];
 });
 
 
@@ -76,9 +75,9 @@ module.exports = {
         }
 
         if (type === 'compile') {
-            loggerAppender.server.info(msg);
+            loggerAppender.server(msg);
         } else {
-            loggerAppender.visiting.info(msg);
+            loggerAppender.visiting(msg);
         }
     },
     error: (msg)=> {
@@ -86,13 +85,13 @@ module.exports = {
             consoleAppender.error(msg);
         }
 
-        loggerAppender.error.error(msg);
+        loggerAppender.error(msg);
     },
     warn: (msg)=> {
         if (mode === 'dev') {
             consoleAppender.warn(msg);
         }
 
-        loggerAppender.error.warn(msg);
+        loggerAppender.warn(msg);
     }
 };
