@@ -34,7 +34,7 @@ try {
         app.use(domi.middleware);
     }
 } catch (err) {
-    throw new Error('domi exec error');
+    throw Error('domi exec error');
 }
 
 // error-handling

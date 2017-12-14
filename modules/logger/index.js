@@ -19,24 +19,34 @@ const LOG_TYPE = ['server', 'visiting', 'error'];
 let noop = function() {};
 let logName = 'koa-ice';
 
-let pretty = pino.pretty({
-    crlf: true,
-    formatter: (ori, preFunction)=> {
-        let line = '[';
-        line += util.formatDate('yyyy-MM-dd hh:mm:ss') + '] ';
-        line += preFunction.asColoredLevel(ori) + ' ';
-        line += preFunction.chalk.cyan(ori.msg);
+var pretty = ()=> {
+    return new pino.pretty({
+        crlf: true,
+        formatter: (ori, preFunction)=> {
+            let line = '[';
+            line += util.formatDate('yyyy-MM-dd hh:mm:ss') + '] ';
+            line += preFunction.asColoredLevel(ori) + ' ';
+            line += preFunction.chalk.cyan(ori.msg);
 
-        return line;
-    }
-});
+            return line;
+        }
+    });
+};
 
+let consolePretty = pretty();
+consolePretty.pipe(process.stdout);
 const consoleAppender = pino({
     name: logName,
     safe: true,
-}, pretty.pipe(process.stdout));
+}, consolePretty);
 
 let logPath = process.cwd() + setting.logPath;
+let loggerPretty = {
+    visiting: null,
+    error: null,
+    server: null
+};
+
 let loggerAppender = {
     visiting: noop,
     error: noop,
@@ -54,44 +64,48 @@ LOG_TYPE.map((item, index)=> {
         fs.openSync(logPath + '/' + item + '.log', 'w');
     }
 
+    loggerPretty[item] = pretty();
+    loggerPretty[item].pipe(fs.createWriteStream(logPath + '/' + item +'.log'));
     loggerAppender[item] = pino({
         name: logName,
         safe: true
-    }, pretty.pipe(fs.createWriteStream(logPath + '/' + item +'.log')))[item === 'error' ? 'error' : 'info'];
+    }, loggerPretty[item]);
 });
 
 
 let mode = global.mode;
 
 module.exports = {
-    /**
-     * info log
-     * @param msg
-     * @param type [compile]  compile write to server start log
-     */
-    info: (msg, type)=> {
+    info: (msg)=> {
         if (mode === 'dev') {
             consoleAppender.info(msg);
         }
 
-        if (type === 'compile') {
-            loggerAppender.server(msg);
-        } else {
-            loggerAppender.visiting(msg);
-        }
+        loggerAppender.visiting.info(msg);
     },
     error: (msg)=> {
         if (mode === 'dev') {
             consoleAppender.error(msg);
         }
 
-        loggerAppender.error(msg);
+        loggerAppender.error.error(msg);
     },
     warn: (msg)=> {
         if (mode === 'dev') {
             consoleAppender.warn(msg);
         }
 
-        loggerAppender.warn(msg);
+        loggerAppender.error.warn(msg);
+    },
+    debug: (msg)=> {
+        consoleAppender.debug(msg);
+    },
+    // server start log
+    start: (msg)=> {
+        if (mode === 'dev') {
+            consoleAppender.info(msg);
+        }
+
+        loggerAppender.server.info(msg);
     }
 };
