@@ -25,7 +25,8 @@ var pretty = ()=> {
         crlf: true,
         formatter: (ori, preFunction)=> {
             let line = '[';
-            line += util.formatDate('yyyy-MM-dd hh:mm:ss') + '] ';
+            line += util.formatDate('yyyy-MM-dd hh:mm:ss') + ']';
+            line += '[PID:'+ ori.pid +'] ';
             line += preFunction.asColoredLevel(ori) + ' ';
             line += preFunction.chalk.cyan(ori.msg);
 
