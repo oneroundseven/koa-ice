@@ -9,6 +9,7 @@ const pino = require('pino');
 const fs = require('fs');
 const util = require('../util');
 const setting = require('../setting');
+const path = require('path');
 
 /**
  * server: 启动日志
@@ -40,7 +41,7 @@ const consoleAppender = pino({
     safe: true,
 }, consolePretty);
 
-let logPath = process.cwd() + setting.logPath;
+let logPath = path.resolve(process.cwd(), setting.logPath);
 let loggerPretty = {
     visiting: null,
     error: null,

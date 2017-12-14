@@ -22,7 +22,7 @@ function staticFilter() {
         }
         await next();
 
-        if (!result) {
+        if (staticMIME.indexOf(ext) !== -1) {
             logger.info(visitLogFormat(ctx.request, ctx.response));
         }
     }
