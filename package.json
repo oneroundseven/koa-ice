@@ -1,6 +1,6 @@
 {
   "name": "nview-ice",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "static ice project",
   "main": "bin/www",
   "scripts": {
@@ -9,7 +9,7 @@
     "prd": "pm2 start bin/www --release",
     "debug": "set debug=app:* && node bin/www -d"
   },
-  "author": "",
+  "author": "oneroundseven@gmail.com",
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
