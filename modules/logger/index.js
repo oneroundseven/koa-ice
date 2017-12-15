@@ -10,6 +10,7 @@ const fs = require('fs');
 const util = require('../util');
 const setting = require('../setting');
 const path = require('path');
+var debug = require('debug')('app:logger');
 
 /**
  * server: 启动日志
@@ -22,14 +23,13 @@ let logName = 'koa-ice';
 
 var pretty = ()=> {
     return new pino.pretty({
-        crlf: true,
         formatter: (ori, preFunction)=> {
             let line = '[';
-            line += util.formatDate('yyyy-MM-dd hh:mm:ss') + ']';
+            line += util.formatDate('yyyy-MM-dd hh:mm:ss.SSS') + ']';
             line += '[PID:'+ ori.pid +'] ';
             line += preFunction.asColoredLevel(ori) + ' ';
             line += preFunction.chalk.cyan(ori.msg);
-
+            line += '\r';
             return line;
         }
     });
@@ -67,13 +67,14 @@ LOG_TYPE.map((item, index)=> {
     }
 
     loggerPretty[item] = pretty();
-    loggerPretty[item].pipe(fs.createWriteStream(logPath + '/' + item +'.log'));
+    loggerPretty[item].pipe(fs.createWriteStream(logPath + '/' + item +'.log', {
+        flags: 'r+'
+    }));
     loggerAppender[item] = pino({
         name: logName,
         safe: true
     }, loggerPretty[item]);
 });
-
 
 let mode = global.mode;
 
@@ -83,21 +84,33 @@ module.exports = {
             consoleAppender.info(msg);
         }
 
-        loggerAppender.visiting.info(msg);
+        try {
+            loggerAppender.visiting.info(msg);
+        } catch(err) {
+            debug('Write Log Error:' + err);
+        }
     },
     error: (msg)=> {
         if (mode === 'dev') {
             consoleAppender.error(msg);
         }
 
-        loggerAppender.error.error(msg);
+        try {
+            loggerAppender.error.error(msg);
+        } catch(err) {
+            debug('Write Log Error:' + err);
+        }
     },
     warn: (msg)=> {
         if (mode === 'dev') {
             consoleAppender.warn(msg);
         }
 
-        loggerAppender.error.warn(msg);
+        try {
+            loggerAppender.error.warn(msg);
+        } catch(err) {
+            debug('Write Log Error:' + err);
+        }
     },
     debug: (msg)=> {
         consoleAppender.debug(msg);
@@ -108,6 +121,10 @@ module.exports = {
             consoleAppender.info(msg);
         }
 
-        loggerAppender.server.info(msg);
+        try {
+            loggerAppender.server.info(msg);
+        } catch(err) {
+            debug('Write Log Error:' + err);
+        }
     }
 };
