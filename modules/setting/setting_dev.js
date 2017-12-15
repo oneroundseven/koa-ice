@@ -10,8 +10,8 @@ module.exports = {
         {
             name: 'channelfy',
             domain: 'www.channelfy-fy.com',
-            api: 'E:\\Project\\nview-ice\\mic\\channelfy',
-            view: 'E:\\Project\\nview-ice\\mic\\channelfy\\view\\'
+            api: 'E:\\Project\\summers-ice\\mic\\channelfy',
+            view: 'E:\\Project\\summers-ice\\mic\\channelfy\\view\\'
         },
         {
             name: 'micen',

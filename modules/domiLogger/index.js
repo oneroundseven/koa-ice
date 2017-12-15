@@ -6,10 +6,20 @@
  */
 
 const logger = require('../logger');
+const overTime = 10000;
 
 function domiAction() {
     return async (ctx, next)=> {
+        // 10 seconds over time
+        ctx.__domiRenderTimer = setTimeout(function() {
+            next();
+            logger.error('DOMI render overtime:' + visitLogFormat(ctx.request, ctx.response));
+        }, overTime);
         await next();
+        if (ctx.__domiRenderTimer) {
+            clearTimeout(ctx.__domiRenderTimer);
+            ctx.__domiRenderTimer = null;
+        }
         logger.info(visitLogFormat(ctx.request, ctx.response));
     }
 }
