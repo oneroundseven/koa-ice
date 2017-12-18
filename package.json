@@ -1,6 +1,6 @@
 {
   "name": "summers-ice",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "static ice project",
   "main": "bin/www",
   "scripts": {
