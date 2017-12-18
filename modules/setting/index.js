@@ -22,11 +22,11 @@ for (let cmd in setting) {
 }
 
 // override default setting
-let run_dir = process.cwd();
-if (fs.existsSync(path.resolve(run_dir + '/config'))) {
+let config_dir = process.env.NODE_CONFIG_DIR;
+if (config_dir && fs.existsSync(config_dir)) {
     let setting_path;
     for (let cmd in setting) {
-        setting_path = path.resolve(run_dir + '/config/setting_' + cmd + '.js');
+        setting_path = path.resolve(config_dir + '/setting_' + cmd + '.js');
         if (fs.existsSync(setting_path)) {
             setting[cmd] = require(setting_path);
         }
