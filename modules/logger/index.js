@@ -8,7 +8,7 @@
 const pino = require('pino');
 const fs = require('fs');
 const util = require('../util');
-const setting = require('../setting');
+const setting = require('../../config');
 const path = require('path');
 var debug = require('debug')('app:logger');
 

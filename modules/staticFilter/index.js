@@ -6,7 +6,7 @@
  */
 
 const logger = require('../logger');
-const proxy = require('../setting').proxy;
+const proxy = require('../../config').domiConfig;
 const {URL} = require('url');
 const path = require('path');
 const staticMIME = ['css', 'js', 'gif', 'png', 'html', 'jpeg', 'jpg', 'json', 'pdf', 'swf', 'txt', 'wav', 'wma', 'wmv', 'xml', 'woff', 'ttf', 'svg', 'eot', 'ico'];

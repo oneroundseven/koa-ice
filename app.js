@@ -2,7 +2,7 @@ const Koa = require('koa');
 const app = new Koa();
 
 const onerror = require('koa-onerror');
-const setting = require('./modules/setting');
+const setting = require('./config');
 const logger = require('./modules/logger');
 const blacklist = require('./modules/blacklist');
 const staticFilter = require('./modules/staticFilter');

@@ -1,13 +1,10 @@
 {
   "name": "summers-ice",
-  "version": "0.0.2",
+  "version": "0.0.3-beta.0",
   "description": "static ice project",
-  "main": "bin/www",
+  "main": "./bin/www",
   "scripts": {
-    "start": "node bin/www -d",
-    "test": "node bin/www -t",
-    "prd": "node bin/www -r",
-    "debug": "set debug=app:* && node bin/www -d"
+    "start": "set debug=app:* && node ./test.js"
   },
   "author": "oneroundseven@gmail.com",
   "license": "ISC",
