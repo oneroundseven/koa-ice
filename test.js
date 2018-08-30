@@ -7,4 +7,4 @@ let ss = require('./bin/www');
  * @author oneroundseven@gmail.com
  */
 
-ss.start(123);
+ss.start();

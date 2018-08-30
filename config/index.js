@@ -8,6 +8,7 @@ const SUMMERS_CONFIG_FILE = 'summers-ice-default.js';
 
 const path = require('path');
 const fs = require('fs');
+var debug = require('debug')('app:server');
 
 let settings = require('./'+ SUMMERS_CONFIG_FILE);
 
@@ -27,10 +28,13 @@ if (settings.staticPath && fs.existsSync(settings.staticPath)) {
     settings.staticPath = process.cwd();
 }
 
-let domiConfig = [];
+let hosts = [];
 let fileDir;
-
+debug('scanDir from '+ settings.staticPath);
 fs.readdir(settings.staticPath, (err, files)=> {
+    if (err) {
+        console.error(err);
+    }
     files.forEach((fileName)=> {
         if (!fileName.startsWith('.') && fileName !== 'node_modules') {
             fileDir = path.join(settings.staticPath, fileName);
@@ -39,11 +43,13 @@ fs.readdir(settings.staticPath, (err, files)=> {
                     console.warn('Get File Info Error:'+ fileDir);
                 } else {
                     if (stats.isDirectory()) {
-                        fileDir = path.join(settings.staticPath, fileName, settings.domiConfig);
+                        fileDir = path.join(settings.staticPath, fileName, settings.config);
                         if (fs.existsSync(fileDir)) {
+                            debug('Find hosts file from '+ path.join(settings.staticPath, fileName));
                             try {
                                 let content = fs.readFileSync(fileDir, { encoding: 'utf-8' });
-                                domiConfig.push(serialProperties(content))
+                                hosts.push(serialProperties(content));
+                                debug('Mock Record Dir:'+ path.join(settings.staticPath, fileName) + ' domain='+ content.domain);
                             } catch (err) {
                                 console.error('Trans properties Error:' + fileDir);
                             }
@@ -74,6 +80,6 @@ function serialProperties(content) {
 
 fileDir = null;
 
-settings.domiConfig = domiConfig;
+settings.hosts = hosts;
 module.exports = settings;
 

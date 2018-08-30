@@ -61,9 +61,12 @@ function onError(error) {
 
 
 module.exports = {
-    start: (compiler) => {
-        if (!compiler) {
-            throw 'compiler must not be null.';
+    start: (summersCompiler) => {
+        if (!summersCompiler) {
+            debug('summersCompiler loaded fail... Will not be compile static file.');
+        } else {
+            debug('summersCompiler loaded success.');
+            global.SummersCompiler = summersCompiler;
         }
 
         /**

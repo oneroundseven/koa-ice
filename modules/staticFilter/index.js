@@ -19,6 +19,9 @@ function staticFilter() {
 
         if (staticMIME.indexOf(ext) === -1 && result) {
             ctx.domi = result;
+        } else {
+            console.log(myURL)
+            ctx.__static = true;
         }
         await next();
 

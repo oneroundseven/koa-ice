@@ -1,6 +1,6 @@
 {
   "name": "summers-ice",
-  "version": "0.0.3-beta.0",
+  "version": "0.0.3-beta.1",
   "description": "static ice project",
   "main": "./bin/www",
   "scripts": {
@@ -24,6 +24,6 @@
     "koa-views": "^5.2.1",
     "pino": "^4.10.2",
     "pug": "^2.0.0-rc.1",
-    "summers-domi": "latest"
+    "summers-domi": "0.0.7"
   }
 }
