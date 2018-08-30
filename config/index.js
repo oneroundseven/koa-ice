@@ -23,9 +23,15 @@ if (config_dir && fs.existsSync(config_dir)) {
 
 // domi mock cache mapping
 if (settings.staticPath && fs.existsSync(settings.staticPath)) {
-    settings.staticPath = path.resolve(settings.staticPath);
+    settings.staticPath = settings.staticPath;
 } else {
     settings.staticPath = process.cwd();
+}
+
+if (settings.staticTargetPath && fs.existsSync(settings.staticTargetPath)) {
+    settings.staticTargetPath = settings.staticTargetPath;
+} else {
+    settings.staticTargetPath = path.join(settings.staticPath, '/target');
 }
 
 let hosts = [];
@@ -48,8 +54,11 @@ fs.readdir(settings.staticPath, (err, files)=> {
                             debug('Find hosts file from '+ path.join(settings.staticPath, fileName));
                             try {
                                 let content = fs.readFileSync(fileDir, { encoding: 'utf-8' });
-                                hosts.push(serialProperties(content));
-                                debug('Mock Record Dir:'+ path.join(settings.staticPath, fileName) + ' domain='+ content.domain);
+                                let serialResult = serialProperties(content);
+                                if (serialResult) {
+                                    hosts.push(serialResult);
+                                }
+                                debug('Mock Record Dir:'+ path.join(settings.staticPath, fileName) + ' domain='+ (serialResult && serialResult.domain));
                             } catch (err) {
                                 console.error('Trans properties Error:' + fileDir);
                             }
@@ -64,7 +73,7 @@ fs.readdir(settings.staticPath, (err, files)=> {
 
 function serialProperties(content) {
     let result = {};
-    if (!content || content.length === 0) return result;
+    if (!content || content.length === 0) return null;
 
     let matchResult;
 

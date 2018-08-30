@@ -15,24 +15,48 @@ const {URL} = require('url');
  * 2、文件不存在直接返回404
  * 3、文件存在，调用编译方法获取最新的编译文件名
  * 4、判断编译文件是否存在，不存在返回 204 调用编译执行
- * 5、编译文件存在正常返回
+ * 5、编译文件存在则读取文件内容返回
  */
 
+let sourcePath;
+let targetPath;
+const debug = require('debug')('app:compile');
+const mime = require('mime-types');
 
 module.exports = ()=> {
     return async (ctx, next)=> {
-        if (ctx.__static) {
+        if (ctx.__static && SummersCompiler) {
             let koaResponse = ctx.response;
+            let requestURL = new URL(ctx.request.href);
 
-            if (koaResponse.status === '200' && SummersCompiler) {
-                let requestURL = new URL(ctx.request.href);
+            sourcePath = path.join(setting.staticPath, requestURL.pathname);
 
-                let hashFileName = SummersCompiler.hash().get(requestURL.pathname);
-                if (fs.existsSync(path.join(process.cwd(), requestURL.pathname))) {
+            try {
+                let source = await fs.stat(sourcePath);
+                let target;
 
+                // 如果访问为源文件
+                if (source.isFile()) {
+                    let hashFileName = SummersCompiler.hash().get(requestURL.pathname);
+                    targetPath = path.join(setting.staticTargetPath, requestURL.pathname.replace(/\/([^\/]+?)$/, '/'+ hashFileName));
+
+                    target = await fs.stat(targetPath);
+                    if (target.isFile()) {
+                        let file = await fs.readFile(targetPath);
+                        ctx.type = mime.lookup(requestURL.pathname) || 'application/octet-stream';
+                        ctx.set('cache-control', 'public, max-age=' + setting.staticExpires * 24 * 60 * 60);
+                        ctx.body = file;
+                    } else {
+                        SummersCompiler.watch.addWatchTask('change', sourcePath);
+                        ctx.status = '204';
+                        koaResponse.end();
+                    }
+                } else {
+                    await next();
                 }
 
-            } else {
+            } catch(err) {
+                debug('target for source compile Error:'+ sourcePath + ' ERROR:' + err);
                 await next();
             }
         } else {

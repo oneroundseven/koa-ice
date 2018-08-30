@@ -17,14 +17,15 @@ app.use(blacklist());
 // static middle
 app.use(staticFilter());
 // static router
-let staticPath = setting.staticPath;
-if (staticPath) {
-    if (!path.isAbsolute(staticPath)) {
-        staticPath = path.resolve(__dirname, staticPath);
+let staticTargetPath = setting.staticTargetPath;
+
+if (staticTargetPath) {
+    if (!path.isAbsolute(staticTargetPath)) {
+        staticTargetPath = path.resolve(__dirname, staticTargetPath);
     }
 
-    app.use(staticCache(staticPath, {
-        maxAge: 365 * 24 * 60 * 60
+    app.use(staticCache(staticTargetPath, {
+        maxAge: setting.staticExpires * 24 * 60 * 60
     }));
 }
 // domi middle wave
