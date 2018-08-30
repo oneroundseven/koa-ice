@@ -6,7 +6,7 @@
  */
 
 const logger = require('../logger');
-const overTime = 10000;
+const setting = require('../../config');
 
 function domiAction() {
     return async (ctx, next)=> {
@@ -14,7 +14,7 @@ function domiAction() {
         ctx.__domiRenderTimer = setTimeout(function() {
             next();
             logger.error('DOMI render overtime:' + visitLogFormat(ctx.request, ctx.response));
-        }, overTime);
+        }, setting.mockOverTime * 1000);
         await next();
         if (ctx.__domiRenderTimer) {
             clearTimeout(ctx.__domiRenderTimer);

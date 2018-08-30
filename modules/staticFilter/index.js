@@ -6,7 +6,7 @@
  */
 
 const logger = require('../logger');
-const proxy = require('../../config').domiConfig;
+const hosts = require('../../config').hosts;
 const {URL} = require('url');
 const path = require('path');
 const staticMIME = ['css', 'js', 'gif', 'png', 'html', 'jpeg', 'jpg', 'json', 'pdf', 'swf', 'txt', 'wav', 'wma', 'wmv', 'xml', 'woff', 'ttf', 'svg', 'eot', 'ico'];
@@ -20,7 +20,6 @@ function staticFilter() {
         if (staticMIME.indexOf(ext) === -1 && result) {
             ctx.domi = result;
         } else {
-            console.log(myURL)
             ctx.__static = true;
         }
         await next();
@@ -40,13 +39,13 @@ function match(domain, pathname) {
     let result = null;
     let app;
 
-    if (!proxy || proxy.length === 0) {
+    if (!hosts || hosts.length === 0) {
         return result;
     }
 
     try {
-        for (var i = 0; i < proxy.length; i++) {
-            app = proxy[i];
+        for (var i = 0; i < hosts.length; i++) {
+            app = hosts[i];
 
             if (app.domain === domain) {
                 if (app.pathFilter) {

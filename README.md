@@ -28,6 +28,7 @@ module.exports = {
     staticTargetPath: null, // 静态资源编译后的文件存储路径, 默认为当前staticPath路径/target
     staticTargetFilter: ['jpg', 'png', 'gif', 'pdf', 'html'], // 配置哪些静态资源不走编译后的文件
 
-    config: 'hosts.properties' // mock 配置文件 (当前命令执行路径下的每个文件夹中独立配置，有则纳入mock模拟)
+    config: 'hosts.properties', // mock 配置文件 (当前命令执行路径下的每个文件夹中独立配置，有则纳入mock模拟)
+    mockOverTime: 10 // 本地模拟数据请求超时时间设置 默认10s
 };
 ````
