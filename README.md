@@ -32,3 +32,12 @@ module.exports = {
     mockOverTime: 10 // 本地模拟数据请求超时时间设置 默认10s
 };
 ````
+
+
+#### 使用
+
+````
+const SummerICE = require('summers-ice');
+
+SummerICE.start([summerCompiler]);
+````
