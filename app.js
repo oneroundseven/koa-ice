@@ -25,7 +25,8 @@ if (staticTargetPath) {
     }
 
     app.use(staticCache(staticTargetPath, {
-        maxAge: setting.staticExpires * 24 * 60 * 60
+        maxAge: setting.staticExpires * 24 * 60 * 60,
+        dynamic: true
     }));
 }
 // domi middle wave

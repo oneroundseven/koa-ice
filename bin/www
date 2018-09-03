@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-process.env.debug = 'app:* ';
+process.env.DEBUG = 'app:* ';
 global.mode = 'dev';
 
 var app = require('../app');
@@ -61,7 +61,8 @@ function onError(error) {
 
 
 module.exports = {
-    start: (summersCompiler) => {
+    start: (summersCompiler, callback) => {
+
         if (!summersCompiler) {
             debug('summersCompiler loaded fail... Will not be compile static file.');
         } else {
@@ -86,7 +87,10 @@ module.exports = {
          */
 
         server.listen(port);
-        server.on('error', onError);
+        server.on('error', (err)=> {
+            onError(err);
+            callback && callback();
+        });
         server.on('listening', onListening);
 
         /**
@@ -98,7 +102,8 @@ module.exports = {
             var bind = typeof addr === 'string'
                 ? 'pipe ' + addr
                 : 'port ' + addr.port;
-            debug('Listening on ' + bind);
+            debug('Listening on ' + bind + ' http://localhost:9098');
+            callback && callback();
         }
     }
 }

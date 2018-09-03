@@ -37,38 +37,31 @@ if (settings.staticTargetPath && fs.existsSync(settings.staticTargetPath)) {
 let hosts = [];
 let fileDir;
 debug('scanDir from '+ settings.staticPath);
-fs.readdir(settings.staticPath, (err, files)=> {
-    if (err) {
-        console.error(err);
-    }
-    files.forEach((fileName)=> {
-        if (!fileName.startsWith('.') && fileName !== 'node_modules') {
-            fileDir = path.join(settings.staticPath, fileName);
-            fs.stat(fileDir, (err, stats)=> {
-                if (err) {
-                    console.warn('Get File Info Error:'+ fileDir);
-                } else {
-                    if (stats.isDirectory()) {
-                        fileDir = path.join(settings.staticPath, fileName, settings.config);
-                        if (fs.existsSync(fileDir)) {
-                            debug('Find hosts file from '+ path.join(settings.staticPath, fileName));
-                            try {
-                                let content = fs.readFileSync(fileDir, { encoding: 'utf-8' });
-                                let serialResult = serialProperties(content);
-                                if (serialResult) {
-                                    hosts.push(serialResult);
-                                }
-                                debug('Mock Record Dir:'+ path.join(settings.staticPath, fileName) + ' domain='+ (serialResult && serialResult.domain));
-                            } catch (err) {
-                                console.error('Trans properties Error:' + fileDir);
-                            }
-                        }
+let files =  fs.readdirSync(settings.staticPath);
+files.forEach((fileName, index)=> {
+    if (!fileName.startsWith('.') && fileName !== 'node_modules') {
+        fileDir = path.join(settings.staticPath, fileName);
+        let stats = fs.statSync(fileDir);
+        if (stats && stats.isDirectory()) {
+            fileDir = path.join(settings.staticPath, fileName, settings.config);
+            if (fs.existsSync(fileDir)) {
+                debug('Find hosts file from '+ path.join(settings.staticPath, fileName));
+                try {
+                    let content = fs.readFileSync(fileDir, { encoding: 'utf-8' });
+                    let serialResult = serialProperties(content);
+                    if (serialResult) {
+                        hosts.push(serialResult);
                     }
+                    debug('Mock Record Dir:'+ path.join(settings.staticPath, fileName) + ' domain='+ (serialResult && serialResult.domain));
+                } catch (err) {
+                    console.error('Trans properties Error:' + fileDir);
                 }
-            })
+            }
         }
-
-    });
+    }
+    if (index === files.length - 1) {
+        settings.__hostHandle && settings.__hostHandle();
+    }
 });
 
 function serialProperties(content) {
