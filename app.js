@@ -10,12 +10,15 @@ const summersMock = require('summers-mock');
 const mockLogger = require('./modules/mockLogger');
 const staticCache = require('koa-static-cache');
 const path = require('path');
+const compiler = require('./modules/compiler');
 
 // error handler
 onerror(app);
 app.use(blacklist());
 // static middle
 app.use(staticFilter());
+
+app.use(compiler());
 // static router
 let staticTargetPath = setting.staticTargetPath;
 
