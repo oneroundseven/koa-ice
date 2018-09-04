@@ -32,17 +32,22 @@ module.exports = ()=> {
             sourcePath = path.join(setting.staticPath, requestURL.pathname);
 
             try {
-                let source = await fs.stat(sourcePath);
+                let source = fs.statSync(sourcePath);
                 let target;
 
                 // 如果访问为源文件
                 if (source.isFile()) {
-                    let hashFileName = SummersCompiler.hash().get(requestURL.pathname);
-                    targetPath = path.join(setting.staticTargetPath, requestURL.pathname.replace(/\/([^\/]+?)$/, '/'+ hashFileName));
+                    let hashFileName = SummersCompiler.hash(null, true).get(requestURL.pathname);
 
-                    target = await fs.stat(targetPath);
+                    if (SummersCompiler.options.basic.out) {
+                        setting.staticTargetPath = SummersCompiler.options.basic.out;
+                    }
+
+                    targetPath = path.join(setting.staticTargetPath, '/'+ hashFileName + path.extname(ctx.req.url));
+
+                    target = fs.statSync(targetPath);
                     if (target.isFile()) {
-                        let file = await fs.readFile(targetPath);
+                        let file = fs.readFileSync(targetPath);
                         ctx.type = mime.lookup(requestURL.pathname) || 'application/octet-stream';
                         ctx.set('cache-control', 'public, max-age=' + setting.staticExpires * 24 * 60 * 60);
                         ctx.body = file;
