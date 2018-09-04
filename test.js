@@ -8,5 +8,5 @@ const summersCompiler = new SummersCompiler();
  * @fileOverview summers-ice
  * @author oneroundseven@gmail.com
  */
-//summersCompiler.watch();
+summersCompiler.watch();
 ss.start(summersCompiler);

@@ -33,27 +33,26 @@ module.exports = ()=> {
 
             try {
                 let source = fs.statSync(sourcePath);
-                let target;
 
                 // 如果访问为源文件
                 if (source.isFile()) {
-                    let hashFileName = SummersCompiler.hash(null, true).get(requestURL.pathname);
+                    targetPath = SummersCompiler.getHash(sourcePath);
 
-                    if (SummersCompiler.options.basic.out) {
-                        setting.staticTargetPath = SummersCompiler.options.basic.out;
-                    }
-
-                    targetPath = path.join(setting.staticTargetPath, '/'+ hashFileName + path.extname(ctx.req.url));
-
-                    target = fs.statSync(targetPath);
-                    if (target.isFile()) {
-                        let file = fs.readFileSync(targetPath);
-                        ctx.type = mime.lookup(requestURL.pathname) || 'application/octet-stream';
-                        ctx.set('cache-control', 'public, max-age=' + setting.staticExpires * 24 * 60 * 60);
-                        ctx.body = file;
+                    if (targetPath) {
+                        let target = fs.statSync(targetPath);
+                        if (target && target.isFile()) {
+                            let file = fs.readFileSync(targetPath);
+                            ctx.type = mime.lookup(requestURL.pathname) || 'application/octet-stream';
+                            ctx.set('cache-control', 'public, max-age=' + setting.staticExpires * 24 * 60 * 60);
+                            ctx.body = file;
+                        } else {
+                            SummersCompiler.watch.addWatchTask('change', sourcePath);
+                            ctx.status = 204;
+                            koaResponse.end();
+                        }
                     } else {
                         SummersCompiler.watch.addWatchTask('change', sourcePath);
-                        ctx.status = '204';
+                        ctx.status = 204;
                         koaResponse.end();
                     }
                 } else {
