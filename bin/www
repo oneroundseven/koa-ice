@@ -6,7 +6,6 @@
 process.env.DEBUG = 'app:* ';
 global.mode = 'dev';
 
-var app = require('../app');
 var debug = require('debug')('app:server');
 var http = require('http');
 var setting = require('../config');
@@ -41,6 +40,8 @@ module.exports = {
             debug('summersCompiler loaded success.');
             global.SummersCompiler = summersCompiler;
         }
+
+        var app = require('../app');
 
         /**
          * Get port from environment and store in Express.
