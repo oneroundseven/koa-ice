@@ -6,8 +6,8 @@ const setting = require('./config');
 const logger = require('./modules/logger');
 const blacklist = require('./modules/blacklist');
 const staticFilter = require('./modules/staticFilter');
-const domi = require('summers-domi');
-const domiLogger = require('./modules/domiLogger');
+const summersMock = require('summers-mock');
+const mockLogger = require('./modules/mockLogger');
 const staticCache = require('koa-static-cache');
 const path = require('path');
 
@@ -29,14 +29,16 @@ if (staticTargetPath) {
         dynamic: true
     }));
 }
-// domi middle wave
+// summers mock middle wave
 try {
-    if (domi) {
-        app.use(domiLogger());
-        app.use(domi.middleware);
+    if (summersMock) {
+        summersMock.registrySummersCompiler(global.SummersCompiler);
+        app.use(mockLogger());
+        app.use(summersMock.middleware);
     }
 } catch (err) {
-    throw Error('domi exec error');
+    console.error(err);
+    throw Error('summersMock exec error');
 }
 
 // error-handling

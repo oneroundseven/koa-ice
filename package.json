@@ -1,6 +1,6 @@
 {
   "name": "summers-ice",
-  "version": "0.0.3-beta.1",
+  "version": "0.0.1",
   "description": "static ice project",
   "main": "./bin/www",
   "scripts": {
@@ -25,6 +25,7 @@
     "mime-types": "^2.1.20",
     "pino": "^4.10.2",
     "pug": "^2.0.0-rc.1",
-    "summers-domi": "0.0.7"
+    "summers-compile": "0.0.1",
+    "summers-mock": "0.0.1"
   }
 }

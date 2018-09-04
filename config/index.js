@@ -35,20 +35,21 @@ if (settings.staticTargetPath && fs.existsSync(settings.staticTargetPath)) {
 }
 
 let hosts = [];
-let fileDir;
+let fileDir, directDir;
 debug('scanDir from '+ settings.staticPath);
 let files =  fs.readdirSync(settings.staticPath);
 files.forEach((fileName, index)=> {
-    if (!fileName.startsWith('.') && fileName !== 'node_modules') {
+    if (settings.mockIgnore.indexOf(fileName) === -1) {
         fileDir = path.join(settings.staticPath, fileName);
         let stats = fs.statSync(fileDir);
         if (stats && stats.isDirectory()) {
-            fileDir = path.join(settings.staticPath, fileName, settings.config);
+            directDir = path.join(settings.staticPath, fileName);
+            fileDir = path.join(directDir, settings.config);
             if (fs.existsSync(fileDir)) {
-                debug('Find hosts file from '+ path.join(settings.staticPath, fileName));
+                debug('Find hosts file from '+ directDir);
                 try {
                     let content = fs.readFileSync(fileDir, { encoding: 'utf-8' });
-                    let serialResult = serialProperties(content);
+                    let serialResult = serialProperties(content, directDir);
                     if (serialResult) {
                         hosts.push(serialResult);
                     }
@@ -64,7 +65,7 @@ files.forEach((fileName, index)=> {
     }
 });
 
-function serialProperties(content) {
+function serialProperties(content, directDir) {
     let result = {};
     if (!content || content.length === 0) return null;
 
@@ -76,6 +77,14 @@ function serialProperties(content) {
             result[matchResult[1]] = matchResult[2]
         }
     });
+
+    if (!result.api) {
+        result.api = path.join(directDir, '/api');
+    }
+
+    if (!result.view) {
+        result.view = path.join(directDir, '/view');
+    }
 
     return result;
 }
