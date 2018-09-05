@@ -95,7 +95,6 @@ module.exports = {
             debug('summersCompiler loaded fail... Will not be compile static file.');
         } else {
             debug('summersCompiler loaded success.');
-            global.SummersCompiler = summersCompiler;
         }
 
         startHandle = callback;

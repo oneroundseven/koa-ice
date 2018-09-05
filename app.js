@@ -1,13 +1,14 @@
 const Koa = require('koa');
+const path = require('path');
 const onError = require('koa-onerror');
 const setting = require('./config');
-const logger = require('./modules/logger');
-const blacklist = require('./modules/blacklist');
-const staticFilter = require('./modules/staticFilter');
+const logger = require('./src/logger');
+const blacklist = require('./src/blacklist');
+const staticFilter = require('./src/staticFilter');
 const summersMock = require('summers-mock');
-const mockLogger = require('./modules/mockLogger');
+const mockLogger = require('./src/mockLogger');
 const staticCache = require('koa-static-cache');
-const path = require('path');
+const staticCompiler = require('./src/staticCompiler');
 
 
 
@@ -19,8 +20,14 @@ module.exports = (summerCompiler)=> {
     app.use(blacklist());
     // static middle
     app.use(staticFilter());
-    // static router
+    // static compiler
+    app.use(staticCompiler(summerCompiler));
+
+    // static router 如果summerCompiler对象不存在则默认静态资源路径为staticPath
     let staticTargetPath = setting.staticTargetPath;
+    if (!summerCompiler) {
+        staticTargetPath = setting.staticPath;
+    }
 
     if (staticTargetPath) {
         if (!path.isAbsolute(staticTargetPath)) {

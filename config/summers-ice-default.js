@@ -16,5 +16,7 @@ module.exports = {
 
     config: 'hosts.properties', // mock 配置文件 (当前命令执行路径下的每个文件夹中独立配置，有则纳入mock模拟)
     mockOverTime: 10, // 本地模拟数据请求超时时间设置 默认10s
-    mockIgnore: ['.idea', 'node_modules', 'logs', '.git', '.svn', 'target'] // mock配置忽略哪些文件夹
+    mockIgnore: ['.idea', 'node_modules', 'logs', '.git', '.svn', 'target'], // mock配置忽略哪些文件夹
+
+    blackList: ['192.168.31.*'] // 访问黑名单
 };
