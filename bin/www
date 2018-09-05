@@ -6,17 +6,31 @@
 process.env.DEBUG = 'app:* ';
 global.mode = 'dev';
 
-var app = require('../app');
-var debug = require('debug')('app:server');
-var http = require('http');
-var setting = require('../config');
+const app = require('../app');
+const debug = require('debug')('app:server');
+const http = require('http');
+const setting = require('../config');
+
+let startHandle;
+
+/**
+ * Create HTTP server.
+ */
+
+let server;
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+let port = normalizePort(setting.port || '3000');
 
 /**
  * Normalize a port into a number, string, or false.
  */
 
 function normalizePort(val) {
-    var port = parseInt(val, 10);
+    let port = parseInt(val, 10);
 
     if (isNaN(port)) {
         // named pipe
@@ -40,7 +54,7 @@ function onError(error) {
         throw error;
     }
 
-    var bind = typeof port === 'string'
+    let bind = typeof port === 'string'
         ? 'Pipe ' + port
         : 'Port ' + port;
 
@@ -57,6 +71,20 @@ function onError(error) {
         default:
             throw error;
     }
+    startHandle && startHandle(error);
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind + ' http://localhost:9098');
+    startHandle && startHandle();
 }
 
 
@@ -70,40 +98,20 @@ module.exports = {
             global.SummersCompiler = summersCompiler;
         }
 
-        /**
-         * Get port from environment and store in Express.
-         */
-
-        var port = normalizePort(setting.port || '3000');
+        startHandle = callback;
 
         /**
          * Create HTTP server.
          */
 
-        var server = http.createServer(app.callback());
+        server = http.createServer(app(summersCompiler).callback());
 
         /**
          * Listen on provided port, on all network interfaces.
          */
 
         server.listen(port);
-        server.on('error', (err)=> {
-            onError(err);
-            callback && callback();
-        });
+        server.on('error', onError);
         server.on('listening', onListening);
-
-        /**
-         * Event listener for HTTP server "listening" event.
-         */
-
-        function onListening() {
-            var addr = server.address();
-            var bind = typeof addr === 'string'
-                ? 'pipe ' + addr
-                : 'port ' + addr.port;
-            debug('Listening on ' + bind + ' http://localhost:9098');
-            callback && callback();
-        }
     }
 }
