@@ -21,6 +21,7 @@
     "koa-static": "^4.0.2",
     "koa-static-cache": "^5.1.1",
     "koa-views": "^5.2.1",
+    "log4js": "^3.0.5",
     "mime-types": "^2.1.20",
     "pino": "^4.10.2",
     "pug": "^2.0.0-rc.1",

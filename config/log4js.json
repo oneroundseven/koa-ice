@@ -1,0 +1,25 @@
+{
+  "appenders": {
+    "file": {
+      "type": "file",
+      "filename": "logs/important-things.log",
+      "maxLogSize": 10485760,
+      "numBackups": 5,
+      "compress": true,
+      "encoding": "utf-8"
+    },
+    "dateFile": {
+      "type": "dateFile",
+      "filename": "logs/more-important-things.log",
+      "pattern": "yyyy-MM-dd-hh",
+      "compress": true
+    },
+    "out": {
+      "type": "stdout",
+      "layout": { "type": "messagePassThrough" }
+    }
+  },
+  "categories": {
+    "default": { "appenders": ["file", "dateFile", "out"], "level": "all" }
+  }
+}

@@ -47,7 +47,7 @@ module.exports = (summerCompiler)=> {
             app.use(summersMock.middleware);
         }
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw Error('summersMock exec error');
     }
 

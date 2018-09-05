@@ -128,3 +128,15 @@ module.exports = {
         }
     }
 };
+
+// use log4js as logger, add by xingshikang 2018.9.5
+const log4js = require('log4js');
+log4js.configure(path.join(process.env.NODE_CONFIG_DIR || "./config", "log4js.json"));
+const log= log4js.getLogger("summers-ice");
+module.exports={
+    info:function(msg){log.info(msg)},
+    error:function(msg){log.error(msg)},
+    warn:function(msg){log.warn(msg)},
+    debug:function(msg){log.debug(msg)},
+    start:function(){}
+}
