@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ice.iml" filepath="$PROJECT_DIR$/.idea/ice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../summers/summers.iml" filepath="$PROJECT_DIR$/../summers/summers.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/summers-ice.iml" filepath="$PROJECT_DIR$/.idea/summers-ice.iml" />
     </modules>
   </component>
 </project>

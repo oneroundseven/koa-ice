@@ -3,8 +3,5 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
-  <component name="SvnConfiguration">
-    <configuration>D:\Documents and Settings\sheny\Application Data\Subversion</configuration>
-  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false" />
 </project>

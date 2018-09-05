@@ -23,32 +23,37 @@ let targetPath;
 const debug = require('debug')('app:compile');
 const mime = require('mime-types');
 
-module.exports = ()=> {
+module.exports = (summerCompiler)=> {
     return async (ctx, next)=> {
-        if (ctx.__static && SummersCompiler) {
+        if (ctx.__static && summerCompiler) {
             let koaResponse = ctx.response;
             let requestURL = new URL(ctx.request.href);
 
             sourcePath = path.join(setting.staticPath, requestURL.pathname);
 
             try {
-                let source = await fs.stat(sourcePath);
-                let target;
+                let source = fs.statSync(sourcePath);
 
                 // 如果访问为源文件
                 if (source.isFile()) {
-                    let hashFileName = SummersCompiler.hash().get(requestURL.pathname);
-                    targetPath = path.join(setting.staticTargetPath, requestURL.pathname.replace(/\/([^\/]+?)$/, '/'+ hashFileName));
+                    targetPath = summerCompiler.getHash(sourcePath);
 
-                    target = await fs.stat(targetPath);
-                    if (target.isFile()) {
-                        let file = await fs.readFile(targetPath);
-                        ctx.type = mime.lookup(requestURL.pathname) || 'application/octet-stream';
-                        ctx.set('cache-control', 'public, max-age=' + setting.staticExpires * 24 * 60 * 60);
-                        ctx.body = file;
+                    // 如果summerCompiler编译后的文件存在则直接去读编译后的文件返回，如不存在返回204
+                    if (targetPath) {
+                        let target = fs.statSync(targetPath);
+                        if (target && target.isFile()) {
+                            let file = fs.readFileSync(targetPath);
+                            ctx.type = mime.lookup(requestURL.pathname) || 'application/octet-stream';
+                            ctx.set('cache-control', 'public, max-age=' + setting.staticExpires * 24 * 60 * 60);
+                            ctx.body = file;
+                        } else {
+                            summerCompiler.watch.addWatchTask('change', sourcePath);
+                            ctx.status = 204;
+                            koaResponse.end();
+                        }
                     } else {
-                        SummersCompiler.watch.addWatchTask('change', sourcePath);
-                        ctx.status = '204';
+                        summerCompiler.watch.addWatchTask('change', sourcePath);
+                        ctx.status = 204;
                         koaResponse.end();
                     }
                 } else {

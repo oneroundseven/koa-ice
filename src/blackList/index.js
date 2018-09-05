@@ -5,7 +5,7 @@
  * @author oneroundseven@gmail.com
  */
 
-let black_ips = require('../../blacklist');
+let black_ips = require('../../config').blackList;
 const logger = require('../logger');
 
 function blackList() {
