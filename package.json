@@ -25,6 +25,7 @@
     "mime-types": "^2.1.20",
     "pino": "^4.10.2",
     "pug": "^2.0.0-rc.1",
-    "summers-mock": "0.0.1"
+    "summers-mock": "0.0.1",
+    "summers-mock-viewer": "0.0.1"
   }
 }
