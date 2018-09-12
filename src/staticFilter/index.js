@@ -6,7 +6,7 @@
  */
 
 const logger = require('../logger');
-const { error } = require('../debug');
+const { error, warn, info } = require('../debug');
 const hosts = require('../../config').hosts;
 const {URL} = require('url');
 const path = require('path');
@@ -27,7 +27,13 @@ function staticFilter() {
         await next();
 
         if (staticMIME.indexOf(ext) !== -1) {
-            logger.info(visitLogFormat(ctx.request, ctx.response));
+            let loggerStr = visitLogFormat(ctx.request, ctx.response);
+            if (ctx.response.status === 404) {
+                warn('STATIC#'+ loggerStr);
+            } else {
+                info('STATIC#'+ loggerStr);
+            }
+            logger.info(loggerStr);
         }
     }
 }

@@ -9,8 +9,7 @@ const summersMock = require('summers-mock');
 const mockLogger = require('./src/mockLogger');
 const staticCache = require('koa-static-cache');
 const staticCompiler = require('./src/staticCompiler');
-const debug = require('debug')('app:server');
-
+const { error } = require('./src/debug');
 
 module.exports = (summerCompiler)=> {
     const app = new Koa();
@@ -48,12 +47,13 @@ module.exports = (summerCompiler)=> {
             app.use(summersMock.middleware_catch);
         }
     } catch (err) {
-        debug(err);
+        error('Mock loaded Error:'+ err);
     }
 
     // error-handling
     app.on('error', (err, ctx) => {
-        logger.error('server error', err, ctx)
+        error('Server error:' + err);
+        logger.error('Server error', err, ctx)
     });
 
     return app;

@@ -4,7 +4,6 @@
  * @fileOverview koa-ice
  * @author oneroundseven@gmail.com
  */
-const debug = require('../debug/index');
 
 function formatDate(fmt, dateStr) {
     let d = (dateStr ? new Date(dateStr) : new Date());
@@ -30,13 +29,7 @@ function formatDate(fmt, dateStr) {
 }
 
 function visitLogFormat(koaRequest, koaResponse) {
-    let loggerStr = '['+ formatDate('yyyy-MM-dd hh:mm:ss.SSS') +']:'+ koaRequest.method + ' ' + koaResponse.status + ' ' + koaRequest.href + ' ' + koaRequest.headers['user-agent'];
-    if (koaResponse.status === 404) {
-        debug.warn(loggerStr);
-    } else {
-        debug.info(loggerStr);
-    }
-    return loggerStr;
+    return '['+ formatDate('yyyy-MM-dd hh:mm:ss.SSS') +']:'+ koaRequest.method + ' ' + koaResponse.status + ' ' + koaRequest.href + ' ' + koaRequest.headers['user-agent'];
 }
 
 module.exports.formatDate = formatDate;
