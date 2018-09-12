@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../summers/summers.iml" filepath="$PROJECT_DIR$/../summers/summers.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/summers-ice.iml" filepath="$PROJECT_DIR$/.idea/summers-ice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../summers-sample-fe/summers-sample-fe.iml" filepath="$PROJECT_DIR$/../summers-sample-fe/summers-sample-fe.iml" />
     </modules>
   </component>
 </project>

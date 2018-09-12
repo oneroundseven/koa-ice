@@ -7,10 +7,12 @@
 ````
 domain=www.made-in-china.com
 view={viewPath}
+host={filePath}|domain|viewPath
 ````
 
 - domain: 必填，用于mock数据的域名访问和文件夹对应
 - view: 选填, 用于指定html等dom结构文件所在路径, 默认不填则为根目录
+- host: 选配，统一全局配置 单一文件指定所有配置，可以跟 domain单独配置混用，后配置的会覆盖已配置信息
 
 
 ##### 全局配置项

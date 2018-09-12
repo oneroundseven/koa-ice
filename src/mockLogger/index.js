@@ -5,7 +5,8 @@
  * @author oneroundseven@gmail.com
  */
 
-const logger = require('../logger');
+const { error, info } = require('../debug');
+const { visitLogFormat } = require('../util');
 const setting = require('../../config');
 
 function domiAction() {
@@ -13,19 +14,15 @@ function domiAction() {
         // 10 seconds over time
         ctx.__domiRenderTimer = setTimeout(function() {
             next();
-            logger.error('DOMI render overtime:' + visitLogFormat(ctx.request, ctx.response));
+            error('DOMI render overtime:' + visitLogFormat(ctx.request, ctx.response));
         }, setting.mockOverTime * 1000);
         await next();
         if (ctx.__domiRenderTimer) {
             clearTimeout(ctx.__domiRenderTimer);
             ctx.__domiRenderTimer = null;
         }
-        logger.info(visitLogFormat(ctx.request, ctx.response));
+        info(visitLogFormat(ctx.request, ctx.response));
     }
-}
-
-function visitLogFormat(koaRequest, koaResponse) {
-    return 'DOMI:'+ koaRequest.method + ' ' + koaResponse.status + ' ' + koaRequest.href + ' ' + koaRequest.headers['user-agent'];
 }
 
 module.exports = domiAction;

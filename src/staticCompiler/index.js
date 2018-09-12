@@ -20,7 +20,7 @@ const {URL} = require('url');
 
 let sourcePath;
 let targetPath;
-const debug = require('debug')('app:compile');
+const { error, compile } = require('../debug');
 const mime = require('mime-types');
 
 module.exports = (summerCompiler)=> {
@@ -42,16 +42,19 @@ module.exports = (summerCompiler)=> {
                     if (targetPath) {
                         let target = fs.statSync(targetPath);
                         if (target && target.isFile()) {
+                            compile('Compile: file read success =>'+ targetPath);
                             let file = fs.readFileSync(targetPath);
                             ctx.type = mime.lookup(requestURL.pathname) || 'application/octet-stream';
                             ctx.set('cache-control', 'public, max-age=' + setting.staticExpires * 24 * 60 * 60);
                             ctx.body = file;
                         } else {
+                            compile('Compile: file not exist, start trigger summerCompiler =>'+ sourcePath);
                             summerCompiler.watch.addWatchTask('change', sourcePath);
                             ctx.status = 204;
                             koaResponse.end();
                         }
                     } else {
+                        compile('Compile: file not exist, start trigger summerCompiler =>'+ sourcePath);
                         summerCompiler.watch.addWatchTask('change', sourcePath);
                         ctx.status = 204;
                         koaResponse.end();
@@ -61,7 +64,7 @@ module.exports = (summerCompiler)=> {
                 }
 
             } catch(err) {
-                debug('target for source compile Error:'+ sourcePath + ' ERROR:' + err);
+                error('target for source compile Error:'+ sourcePath + ' ERROR:' + err);
                 await next();
             }
         } else {

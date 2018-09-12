@@ -6,9 +6,11 @@
  */
 
 const logger = require('../logger');
+const { error } = require('../debug');
 const hosts = require('../../config').hosts;
 const {URL} = require('url');
 const path = require('path');
+const { visitLogFormat } = require('../util');
 const staticMIME = ['css', 'js', 'gif', 'png', 'html', 'jpeg', 'jpg', 'json', 'pdf', 'swf', 'txt', 'wav', 'wma', 'wmv', 'xml', 'woff', 'ttf', 'svg', 'eot', 'ico'];
 
 function staticFilter() {
@@ -28,10 +30,6 @@ function staticFilter() {
             logger.info(visitLogFormat(ctx.request, ctx.response));
         }
     }
-}
-
-function visitLogFormat(koaRequest, koaResponse) {
-    return 'STATIC:'+ koaRequest.method + ' ' + koaResponse.status + ' ' + koaRequest.href + ' ' + koaRequest.headers['user-agent'];
 }
 
 function match(domain, pathname) {
@@ -61,6 +59,7 @@ function match(domain, pathname) {
             }
         }
     } catch (err) {
+        error('Static Error:'+ err);
         logger.error(err);
     }
 

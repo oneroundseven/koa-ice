@@ -5,10 +5,11 @@
  * @author oneroundseven@gmail.com
  */
 const SUMMERS_CONFIG_FILE = 'summers-ice-default.js';
+const HOST_TAG = 'host';
 
 const path = require('path');
 const fs = require('fs');
-var debug = require('debug')('app:server');
+const { warn, error, info } = require('../src/debug');
 
 let settings = require('./'+ SUMMERS_CONFIG_FILE);
 
@@ -36,7 +37,7 @@ if (settings.staticTargetPath && fs.existsSync(settings.staticTargetPath)) {
 
 let hosts = [];
 let fileDir, directDir;
-debug('scanDir from '+ settings.staticPath);
+info('scanDir from '+ settings.staticPath);
 let files =  fs.readdirSync(settings.staticPath);
 files.forEach((fileName, index)=> {
     if (settings.mockIgnore.indexOf(fileName) === -1) {
@@ -46,50 +47,79 @@ files.forEach((fileName, index)=> {
             directDir = path.join(settings.staticPath, fileName);
             fileDir = path.join(directDir, settings.config);
             if (fs.existsSync(fileDir)) {
-                debug('Find hosts file from '+ directDir);
+                info('Find hosts file from '+ directDir);
                 try {
                     let content = fs.readFileSync(fileDir, { encoding: 'utf-8' });
-                    let serialResult = serialProperties(content, directDir);
-                    if (serialResult) {
-                        hosts.push(serialResult);
-                    }
-                    debug('Mock Record Dir:'+ path.join(settings.staticPath, fileName) + ' domain='+ (serialResult && serialResult.domain));
+                    serialProperties(content, directDir);
                 } catch (err) {
-                    console.error('Trans properties Error:' + fileDir);
+                    console.error('Trans properties Error:' + err);
                 }
             }
         }
     }
-    if (index === files.length - 1) {
-        settings.__hostHandle && settings.__hostHandle();
-    }
 });
 
 function serialProperties(content, directDir) {
-    let result = {};
     if (!content || content.length === 0) return null;
 
-    let matchResult;
+    let matchResult, host = {}, hostTmp = {}, hostConfig;
 
     content.split('\r\n').forEach((property)=> {
         matchResult = property.match(/(.*?)=(.*?)(\s|$)/);
         if (matchResult && matchResult.length > 3) {
-            result[matchResult[1]] = matchResult[2]
+            if (matchResult[1] === HOST_TAG) {
+                try {
+                    hostTmp = {};
+                    hostConfig = matchResult[2].split('|');
+                    let tmpPath = path.join(directDir, '/'+ hostConfig[0]);
+                    hostTmp.domain = hostConfig[1];
+                    hostTmp.view = path.join(tmpPath, (hostConfig.length === 3 ? hostConfig[2] : '/view'));
+                    hostTmp.api = path.join(tmpPath, (hostConfig.length === 4 ? hostConfig[3] : '/api'));
+                    addHost(hostTmp);
+                } catch (err) {
+                    info('Multiple host Error:'+ property + err);
+                    throw JSON.stringify(matchResult);
+                }
+            } else {
+                host[matchResult[1]] = matchResult[2]
+            }
         }
     });
 
-    if (!result.api) {
-        result.api = path.join(directDir, '/api');
+    if (!host.api) {
+        host.api = path.join(directDir, '/api');
     }
 
-    if (!result.view) {
-        result.view = path.join(directDir, '/view');
+    if (!host.view) {
+        host.view = path.join(directDir, '/view');
     }
 
-    return result;
+    hostTmp = null;
+    addHost(host);
+}
+
+/**
+ * 过滤重复存在的配置 按照读取顺序覆盖 (domain去重)
+ */
+function addHost(newHost) {
+    if (!newHost) return;
+
+    for (let i = 0; i < hosts.length; i++) {
+        if (hosts[i].domain === newHost.domain) {
+            warn('Duplicate: '+ JSON.stringify(hosts[i]) + '=> Override by' + JSON.stringify(newHost));
+            hosts.splice(i, 1);
+            break;
+        }
+    }
+
+    hosts.push(newHost);
 }
 
 fileDir = null;
+
+hosts.forEach(host=> {
+    info('Mock Info:'+ JSON.stringify(host));
+});
 
 settings.hosts = hosts;
 module.exports = settings;

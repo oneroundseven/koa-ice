@@ -10,7 +10,8 @@ const fs = require('fs');
 const util = require('../util');
 const setting = require('../../config');
 const path = require('path');
-var debug = require('debug')('app:logger');
+const { error } = require('../debug');
+const log4js = require('log4js');
 
 /**
  * server: 启动日志
@@ -19,9 +20,9 @@ var debug = require('debug')('app:logger');
  */
 const LOG_TYPE = ['server', 'visiting', 'error'];
 let noop = function() {};
-let logName = 'koa-ice';
+let logName = 'summers-ice';
 
-var pretty = ()=> {
+let pretty = ()=> {
     return new pino.pretty({
         formatter: (ori, preFunction)=> {
             let line = '[';
@@ -34,15 +35,15 @@ var pretty = ()=> {
         }
     });
 };
-
+/*
 let consolePretty = pretty();
 consolePretty.pipe(process.stdout);
 const consoleAppender = pino({
     name: logName,
     safe: true,
-}, consolePretty);
+}, consolePretty);*/
 
-let logPath = path.resolve(process.cwd(), setting.logPath);
+let logPath = path.resolve(process.cwd(), '/logs');
 let loggerPretty = {
     visiting: null,
     error: null,
@@ -76,55 +77,49 @@ LOG_TYPE.map((item, index)=> {
     }, loggerPretty[item]);
 });
 
-let mode = global.mode;
-
 module.exports = {
     info: (msg)=> {
-        if (mode === 'dev') {
-            consoleAppender.info(msg);
-        }
-
         try {
             loggerAppender.visiting.info(msg);
         } catch(err) {
-            debug('Write Log Error:' + err);
+            error('Write Log Error:' + err);
         }
     },
     error: (msg)=> {
-        if (mode === 'dev') {
-            consoleAppender.error(msg);
-        }
-
         try {
             loggerAppender.error.error(msg);
         } catch(err) {
-            debug('Write Log Error:' + err);
+            error('Write Log Error:' + err);
         }
     },
     warn: (msg)=> {
-        if (mode === 'dev') {
-            consoleAppender.warn(msg);
-        }
-
         try {
             loggerAppender.error.warn(msg);
         } catch(err) {
-            debug('Write Log Error:' + err);
+            error('Write Log Error:' + err);
         }
-    },
-    debug: (msg)=> {
-        consoleAppender.debug(msg);
     },
     // server start log
-    start: (msg)=> {
-        if (mode === 'dev') {
-            consoleAppender.info(msg);
-        }
-
+    server: (msg)=> {
         try {
             loggerAppender.server.info(msg);
         } catch(err) {
-            debug('Write Log Error:' + err);
+            error('Write Log Error:' + err);
         }
     }
 };
+
+// use log4js as logger, add by xingshikang 2018.9.5
+if (process.env.NODE_CONFIG_DIR) {
+    log4js.configure(path.join(process.env.NODE_CONFIG_DIR || "./config", "log4js.json"));
+    const log= log4js.getLogger("summers-ice");
+
+    module.exports={
+        info:function(msg){log.info(msg);},
+        error:function(msg){log.error(msg)},
+        warn:function(msg){log.warn(msg)},
+        server:function(msg){log.info(msg)}
+    }
+}
+
+
