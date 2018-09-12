@@ -43,7 +43,7 @@ const consoleAppender = pino({
     safe: true,
 }, consolePretty);*/
 
-let logPath = path.resolve(process.cwd(), '/logs');
+let logPath = path.join(process.cwd(), '/logs');
 let loggerPretty = {
     visiting: null,
     error: null,

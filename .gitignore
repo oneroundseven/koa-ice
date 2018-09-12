@@ -4,6 +4,7 @@
 *.iml
 *.zip
 logs
+target
 package-lock.json
 
 /bower_components/*
