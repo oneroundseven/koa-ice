@@ -9,7 +9,7 @@ const summersMock = require('summers-mock');
 const mockLogger = require('./src/mockLogger');
 const staticCache = require('koa-static-cache');
 const staticCompiler = require('./src/staticCompiler');
-
+const debug = require('debug')('app:server');
 
 
 module.exports = (summerCompiler)=> {
@@ -45,10 +45,10 @@ module.exports = (summerCompiler)=> {
             summersMock.registrySummersCompiler(summerCompiler);
             app.use(mockLogger());
             app.use(summersMock.middleware);
+            app.use(summersMock.middleware_catch);
         }
     } catch (err) {
-        console.error(err);
-        throw Error('summersMock exec error');
+        debug(err);
     }
 
     // error-handling
