@@ -36,8 +36,17 @@ if (settings.staticTargetPath && fs.existsSync(settings.staticTargetPath)) {
 }
 
 let hosts = [];
-let fileDir, directDir;
-info('scanDir from '+ settings.staticPath);
+let fileDir, directDir, hostContent;
+info('ScanDir from '+ settings.staticPath);
+// 检查执行根目录下是否存在配置文件
+fileDir = path.join(settings.staticPath, settings.config);
+if (fs.existsSync(fileDir)) {
+    info('Find hosts file from '+ settings.staticPath);
+    hostContent = fs.readFileSync(fileDir, { encoding: 'utf-8' });
+    serialProperties(hostContent, settings.staticPath);
+}
+
+// 检查所有一级文件夹
 let files =  fs.readdirSync(settings.staticPath);
 files.forEach((fileName, index)=> {
     if (settings.mockIgnore.indexOf(fileName) === -1) {
@@ -49,8 +58,8 @@ files.forEach((fileName, index)=> {
             if (fs.existsSync(fileDir)) {
                 info('Find hosts file from '+ directDir);
                 try {
-                    let content = fs.readFileSync(fileDir, { encoding: 'utf-8' });
-                    serialProperties(content, directDir);
+                    hostContent = fs.readFileSync(fileDir, { encoding: 'utf-8' });
+                    serialProperties(hostContent, directDir);
                 } catch (err) {
                     console.error('Trans properties Error:' + err);
                 }

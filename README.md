@@ -14,6 +14,7 @@ host={filePath}|domain|viewPath
 - view: 选填, 用于指定html等dom结构文件所在路径, 默认不填则为根目录
 - host: 选配，统一全局配置 单一文件指定所有配置，可以跟 domain单独配置混用，后配置的会覆盖已配置信息
 
+PS: hosts.properties 文件目前支持根目录配置或者根目录下一级文件夹中配置，不支持层级超过一级的配置
 
 ##### 全局配置项
 
