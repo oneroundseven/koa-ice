@@ -5,7 +5,7 @@
  * @author oneroundseven@gmail.com
  */
 
-const setting = require('../../config');
+const setting = require('../../config')();
 const fs = require('fs');
 const path = require('path');
 const {URL} = require('url');
@@ -20,7 +20,7 @@ const {URL} = require('url');
 
 let sourcePath;
 let targetPath;
-const { error, compile } = require('../debug');
+const { error, compile } = require('../logger');
 const mime = require('mime-types');
 
 module.exports = (summerCompiler)=> {

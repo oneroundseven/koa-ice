@@ -5,9 +5,9 @@
  * @author oneroundseven@gmail.com
  */
 
-const { error } = require('../debug');
+const { error } = require('../logger');
 const { visitLogFormat } = require('../util');
-const setting = require('../../config');
+const setting = require('../../config')();
 
 function domiAction() {
     return async (ctx, next)=> {

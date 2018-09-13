@@ -5,8 +5,8 @@
  * @author oneroundseven@gmail.com
  */
 
-let black_ips = require('../../config').blackList;
-const logger = require('../logger');
+let black_ips = require('../../config')().blackList;
+const { warn } = require('../logger');
 
 function blackList() {
     return async (ctx, next)=> {
@@ -28,7 +28,7 @@ function blackList() {
                 if (ip === black_ips[i]) {
                     ctx.status = 403;
                     ctx.body = 'No Permision';
-                    logger.warn('IP reject:'+ ip);
+                    warn('IP reject:'+ ip);
                     return;
                 } else {
 
@@ -44,7 +44,7 @@ function blackList() {
                             if (ip.join('.') === tmp.join('.')) {
                                 ctx.status = 403;
                                 ctx.body = 'No Permision';
-                                logger.warn('IP reject:'+ ip);
+                                warn('IP reject:'+ ip);
                                 return;
                             }
                         }

@@ -5,9 +5,8 @@
  * @author oneroundseven@gmail.com
  */
 
-const logger = require('../logger');
-const { error, warn, info } = require('../debug');
-const hosts = require('../../config').hosts;
+const { error, warn, info } = require('../logger');
+const hosts = require('../../config')().hosts;
 const {URL} = require('url');
 const path = require('path');
 const { visitLogFormat } = require('../util');
@@ -33,7 +32,6 @@ function staticFilter() {
             } else {
                 info('STATIC#'+ loggerStr);
             }
-            logger.info(loggerStr);
         }
     }
 }
@@ -66,7 +64,6 @@ function match(domain, pathname) {
         }
     } catch (err) {
         error('Static Error:'+ err);
-        logger.error(err);
     }
 
     return result;

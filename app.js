@@ -1,15 +1,14 @@
 const Koa = require('koa');
 const path = require('path');
 const onError = require('koa-onerror');
-const setting = require('./config');
-const logger = require('./src/logger');
+const setting = require('./config')();
 const blacklist = require('./src/blacklist');
 const staticFilter = require('./src/staticFilter');
 const summersMock = require('summers-mock');
 const mockLogger = require('./src/mockLogger');
 const staticCache = require('koa-static-cache');
 const staticCompiler = require('./src/staticCompiler');
-const { error } = require('./src/debug');
+const { error, info } = require('./src/logger');
 
 module.exports = (summerCompiler)=> {
     const app = new Koa();
@@ -27,6 +26,8 @@ module.exports = (summerCompiler)=> {
     if (!summerCompiler) {
         staticTargetPath = setting.staticPath;
     }
+
+    info(('STATIC Started:' + staticTargetPath).bgGreen.white);
 
     if (staticTargetPath) {
         if (!path.isAbsolute(staticTargetPath)) {
@@ -53,7 +54,6 @@ module.exports = (summerCompiler)=> {
     // error-handling
     app.on('error', (err, ctx) => {
         error('Server error:' + err);
-        logger.error('Server error', err, ctx)
     });
 
     return app;
