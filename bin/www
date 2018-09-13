@@ -21,7 +21,7 @@ let server;
  * Get port from environment and store in Express.
  */
 
-let port;
+let localPort;
 
 /**
  * Normalize a port into a number, string, or false.
@@ -52,9 +52,9 @@ function onError(err) {
         throw err;
     }
 
-    let bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
+    let bind = typeof localPort === 'string'
+        ? 'Pipe ' + localPort
+        : 'Port ' + localPort;
 
     // handle specific listen errors with friendly messages
     switch (err.code) {
@@ -87,8 +87,8 @@ function onListening() {
 
 
 module.exports = {
-    start: ({summersCompiler, port}, callback) => {
-
+    start: (compilerOptions, callback) => {
+        let {summersCompiler, port} = compilerOptions || {};
         if (!summersCompiler) {
             warn('summersCompiler loaded fail... Will not be compile static file.');
         } else {
@@ -97,7 +97,7 @@ module.exports = {
 
         startHandle = callback;
 
-        port = normalizePort(port || setting(summersCompiler).port || '3000');
+        localPort = normalizePort(port || setting(summersCompiler).port || '3000');
 
         /**
          * Create HTTP server.
@@ -109,7 +109,7 @@ module.exports = {
          * Listen on provided port, on all network interfaces.
          */
 
-        server.listen(port);
+        server.listen(localPort);
         server.on('error', onError);
         server.on('listening', onListening);
     }
