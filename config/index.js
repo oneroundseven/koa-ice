@@ -6,8 +6,7 @@
  */
 const path = require('path');
 const fs = require('fs');
-const colors = require('colors');
-const { warn, error, info } = require('../src/logger');
+const { warn, error, info, debug } = require('../src/logger');
 
 const SUMMERS_CONFIG_FILE = 'summers-ice-default.js';
 const HOST_TAG = 'host';
@@ -51,11 +50,11 @@ function initialize(summerCompiler) {
     }
 
     let fileDir, directDir, hostContent;
-    info('ScanDir from '+ settings.staticPath.green);
+    debug('ScanDir from '+ settings.staticPath.green);
     // 检查执行根目录下是否存在配置文件
     fileDir = path.join(settings.staticPath, settings.config);
     if (fs.existsSync(fileDir)) {
-        info('Find hosts file from '+ settings.staticPath.green);
+        debug('Find hosts file from '+ settings.staticPath.green);
         hostContent = fs.readFileSync(fileDir, { encoding: 'utf-8' });
         serialProperties(hostContent, settings.staticPath);
     }
