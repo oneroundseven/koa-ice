@@ -70,7 +70,7 @@ function initialize(summerCompiler) {
                 directDir = path.join(settings.staticPath, fileName);
                 fileDir = path.join(directDir, settings.config);
                 if (fs.existsSync(fileDir)) {
-                    info('Find hosts file from '+ directDir.green);
+                    debug('Find hosts file from '+ directDir.green);
                     try {
                         hostContent = fs.readFileSync(fileDir, { encoding: 'utf-8' });
                         serialProperties(hostContent, directDir);
