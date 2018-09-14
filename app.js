@@ -27,7 +27,7 @@ module.exports = (summerCompiler)=> {
         staticTargetPath = setting.staticPath;
     }
 
-    info(('STATIC Started:' + staticTargetPath).bgGreen.white);
+    info(('STATIC Started:' + staticTargetPath).cyan);
 
     if (staticTargetPath) {
         if (!path.isAbsolute(staticTargetPath)) {
