@@ -6,6 +6,7 @@
  */
 const path = require('path');
 const fs = require('fs');
+const colors = require('colors');
 const { warn, error, info, debug } = require('../src/logger');
 
 const SUMMERS_CONFIG_FILE = 'summers-ice-default.js';
