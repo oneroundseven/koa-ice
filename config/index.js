@@ -84,7 +84,7 @@ function initialize(summerCompiler) {
 
     fileDir = null;
     hosts.forEach(host=> {
-        info('Mock Info: ' + ('http://'+ host.domain).magenta +
+        debug('Mock Info: ' + ('http://'+ host.domain).magenta +
             ' API: ' + path.relative(process.cwd(), host.api).green +
             ' VIEWS: '+ path.relative(process.cwd(), host.view).green);
     });
