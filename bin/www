@@ -104,7 +104,7 @@ module.exports = {
             let bind = typeof addr === 'string'
                 ? 'pipe ' + addr
                 :  addr.port;
-            info('Server Loaded Success, Watch '+ ('/'+ appInit.__staticPath || '"/",') +` Listening on ${bind}.`);
+            info('Summers Started.'+ ` Listening on port ${bind}.`);
             startHandle && startHandle();
         });
     }

@@ -100,6 +100,25 @@ function serialProperties(content, directDir) {
 
     let matchResult, host = {}, hostTmp = {}, hostConfig;
 
+    if (settings.config === 'hosts.json') {
+        try {
+            matchResult = JSON.parse(content);
+
+            matchResult.forEach(host=> {
+                let tmpPath = path.join(directDir, '/'+ host.moduleName);
+                addHost({
+                    domain: host.domain,
+                    view: path.join(tmpPath, (host.viewPath ? host.viewPath : '/view')),
+                    api: path.join(tmpPath, (host.apiPath ? host.apiPath : '/api'))
+                }, directDir);
+            })
+        } catch (err) {
+            error('Trans host.json Error:'+ directDir + ' =>' + err);
+        }
+
+        return;
+    }
+
     content.split('\r\n').forEach((property, line)=> {
         matchResult = property.match(/(.*?)=(.*?)(\s|$)/);
         if (matchResult && matchResult.length > 3) {
