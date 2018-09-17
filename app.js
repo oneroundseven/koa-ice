@@ -8,7 +8,9 @@ const summersMock = require('summers-mock');
 const mockLogger = require('./src/mockLogger');
 const staticCache = require('koa-static-cache');
 const staticCompiler = require('./src/staticCompiler');
-const { error, info } = require('./src/logger');
+const mockViewer = require('summers-mock-viewer');
+const router = require('koa-router')();
+const { error } = require('./src/logger');
 
 module.exports = (summerCompiler)=> {
     const app = new Koa();
@@ -27,18 +29,33 @@ module.exports = (summerCompiler)=> {
         staticTargetPath = setting.staticPath;
     }
 
-    info(('STATIC Started:' + staticTargetPath).cyan);
-
     if (staticTargetPath) {
         if (!path.isAbsolute(staticTargetPath)) {
             staticTargetPath = path.resolve(__dirname, staticTargetPath);
         }
+        app.__staticPath = path.relative(process.cwd(), staticTargetPath);
 
         app.use(staticCache(staticTargetPath, {
             maxAge: setting.staticExpires * 24 * 60 * 60,
             dynamic: true
         }));
     }
+
+    // summers mock view page
+    try {
+
+        if (mockViewer) {
+            app.use(staticCache(mockViewer.getViewerPath(), {
+                prefix: '/domi'
+            }));
+
+            let swagger = router.get('/swagger/swagger.yaml', mockViewer.swaggerFileHandler);
+            app.use(swagger.routes()).use(swagger.allowedMethods());
+        }
+    } catch (err) {
+        error('Mock View Loaded Error:'+ err);
+    }
+
     // summers mock middle wave
     try {
         if (summersMock) {
@@ -48,7 +65,7 @@ module.exports = (summerCompiler)=> {
             app.use(summersMock.middleware_catch);
         }
     } catch (err) {
-        error('Mock loaded Error:'+ err);
+        error('Mock Loaded Error:'+ err);
     }
 
     // error-handling

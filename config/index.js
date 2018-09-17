@@ -13,15 +13,13 @@ const SUMMERS_CONFIG_FILE = 'summers-ice-default.js';
 const HOST_TAG = 'host';
 
 let hosts = [];
-let init = false;
-let settings;
+let settings = require('./'+ SUMMERS_CONFIG_FILE);
 
 function initialize(summerCompiler) {
-    if (init) {
+    if (global.__hosts) {
+        settings.hosts = global.__hosts;
         return settings;
     }
-    init = true;
-    settings = require('./'+ SUMMERS_CONFIG_FILE);
 
     // override default setting
     let config_dir = process.env.NODE_CONFIG_DIR;
@@ -33,7 +31,10 @@ function initialize(summerCompiler) {
     }
 
     // domi mock cache mapping
-    if (settings.staticPath && fs.existsSync(settings.staticPath)) {
+    if (settings.staticPath) {
+        if (path.isAbsolute(settings.staticPath)) {
+            warn('staticPath config Error:')
+        }
         settings.staticPath = path.join(process.cwd(), settings.staticPath);
     } else {
         settings.staticPath = process.cwd();
@@ -90,7 +91,7 @@ function initialize(summerCompiler) {
     });
 
     settings.hosts = hosts;
-
+    global.__hosts = hosts;
     return settings;
 }
 
@@ -160,7 +161,6 @@ function addHost(newHost, directDir) {
 
     hosts.push(newHost);
 }
-
 
 module.exports = initialize;
 

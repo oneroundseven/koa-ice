@@ -6,19 +6,22 @@
  */
 
 const { error, warn, info } = require('../logger');
-const hosts = require('../../config')().hosts;
+const setting = require('../../config')();
 const {URL} = require('url');
 const path = require('path');
 const { visitLogFormat } = require('../util');
 const staticMIME = ['css', 'js', 'gif', 'png', 'html', 'jpeg', 'jpg', 'json', 'pdf', 'swf', 'txt', 'wav', 'wma', 'wmv', 'xml', 'woff', 'ttf', 'svg', 'eot', 'ico'];
 
+const hosts = setting.hosts;
+const ignoreRules = setting.staticIgnoreRules;
+
 function staticFilter() {
     return async (ctx, next)=> {
         let ext = path.extname(ctx.req.url).substring(1);
         let myURL = new URL(ctx.request.href);
-        let result = match(myURL.hostname, myURL.pathname);
+        let result = matchMockConfig(myURL.hostname, myURL.pathname);
 
-        if (staticMIME.indexOf(ext) === -1 && result) {
+        if ((staticMIME.indexOf(ext) === -1 && result) || ignorePath(myURL.pathname)) {
             ctx.domi = result;
         } else {
             ctx.__static = true;
@@ -36,7 +39,20 @@ function staticFilter() {
     }
 }
 
-function match(domain, pathname) {
+function ignorePath(pathname) {
+    let result = false;
+    if (ignoreRules && ignoreRules.length > 0) {
+        for (let i = 0; i < ignoreRules.length; i++) {
+            if (new RegExp(ignoreRules[i]).test(pathname)) {
+                result = true;
+            }
+        }
+    }
+
+    return result;
+}
+
+function matchMockConfig(domain, pathname) {
     let matchPath;
     let result = null;
     let app;

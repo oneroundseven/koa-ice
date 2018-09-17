@@ -26,7 +26,6 @@ const mime = require('mime-types');
 module.exports = (summerCompiler)=> {
     return async (ctx, next)=> {
         if (ctx.__static && summerCompiler) {
-            let koaResponse = ctx.response;
             let requestURL = new URL(ctx.request.href);
 
             sourcePath = path.join(setting.staticPath, requestURL.pathname);
@@ -51,13 +50,13 @@ module.exports = (summerCompiler)=> {
                             debug('Compile: file not exist, start trigger summerCompiler =>'+ sourcePath);
                             summerCompiler.watch.addWatchTask('change', sourcePath);
                             ctx.status = 204;
-                            koaResponse.end();
+                            ctx.response.end();
                         }
                     } else {
                         debug('Compile: file not exist, start trigger summerCompiler =>'+ sourcePath);
                         summerCompiler.watch.addWatchTask('change', sourcePath);
                         ctx.status = 204;
-                        koaResponse.end();
+                        ctx.response.end();
                     }
                 } else {
                     await next();

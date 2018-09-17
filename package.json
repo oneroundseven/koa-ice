@@ -25,6 +25,7 @@
     "log4js": "^2.10.0",
     "mime-types": "^2.1.20",
     "pug": "^2.0.0-rc.1",
-    "summers-mock": "0.0.1"
+    "summers-mock": "0.0.1",
+    "summers-mock-viewer": "0.0.1"
   }
 }
