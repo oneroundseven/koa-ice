@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: channelfy
 # during dev, should point to your local machine
-host: localhost:55501
+#host: localhost:55501
 # 新增Https 端口配置选项
 # x-ssl-port: 44301
 # basePath prefixes all resource paths 
