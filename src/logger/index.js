@@ -22,8 +22,8 @@ debug.color = 6;
 
 // use log4js as logger 如果环境变量配置了NODE_CONFIG_DIR
 if (process.env.NODE_CONFIG_DIR) {
-    //log4js.configure(path.join(process.env.NODE_CONFIG_DIR || "./config", "log4js.json"));
-    //logger = log4js.getLogger("summers-ice");
+    log4js.configure(path.join(process.env.NODE_CONFIG_DIR || "./config", "log4js.json"));
+    logger = log4js.getLogger("summers-ice");
 }
 
 module.exports = {
