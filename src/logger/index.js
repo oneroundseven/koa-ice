@@ -27,8 +27,8 @@ if (process.env.NODE_CONFIG_DIR) {
 }
 
 module.exports = {
-    warn: (content)=> { logger ? logger.warn(content) : console.log(content);},
-    info: (content)=> { logger ? logger.info(content) : console.log(content); },
-    error: (content)=> { logger ? logger.error(content) : console.log(content); },
-    debug: (content)=> { logger ? logger.debug(content) : console.log(content); }
+    warn: (content)=> { logger ? logger.warn(content) : warn(content);},
+    info: (content)=> { logger ? logger.info(content) : info(content); },
+    error: (content)=> { logger ? logger.error(content) : error(content); },
+    debug: (content)=> { logger ? logger.debug(content) : debug(content); }
 };
