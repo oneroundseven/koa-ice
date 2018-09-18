@@ -50,13 +50,13 @@ module.exports = (summerCompiler)=> {
                             debug('Compile: file not exist, start trigger summerCompiler =>'+ sourcePath);
                             summerCompiler.watch.addWatchTask('change', sourcePath);
                             ctx.status = 204;
-                            ctx.response.end();
+                            ctx.response.res.end();
                         }
                     } else {
                         debug('Compile: file not exist, start trigger summerCompiler =>'+ sourcePath);
                         summerCompiler.watch.addWatchTask('change', sourcePath);
                         ctx.status = 204;
-                        ctx.response.end();
+                        ctx.response.res.end();
                     }
                 } else {
                     await next();
