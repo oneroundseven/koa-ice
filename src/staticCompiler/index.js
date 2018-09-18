@@ -5,7 +5,7 @@
  * @author oneroundseven@gmail.com
  */
 
-const setting = require('../../config')();
+const config = require('../../config');
 const fs = require('fs');
 const path = require('path');
 const {URL} = require('url');
@@ -25,6 +25,8 @@ const mime = require('mime-types');
 
 module.exports = (summerCompiler)=> {
     return async (ctx, next)=> {
+        const setting = config();
+
         if (ctx.__static && summerCompiler) {
             let requestURL = new URL(ctx.request.href);
 

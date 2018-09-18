@@ -6,17 +6,20 @@
  */
 
 const { error, warn, debug } = require('../logger');
-const setting = require('../../config')();
+const config = require('../../config');
 const {URL} = require('url');
 const path = require('path');
 const { visitLogFormat } = require('../util');
 const staticMIME = ['css', 'js', 'gif', 'png', 'html', 'jpeg', 'jpg', 'json', 'pdf', 'swf', 'txt', 'wav', 'wma', 'wmv', 'xml', 'woff', 'ttf', 'svg', 'eot', 'ico'];
 
-const hosts = setting.hosts;
-const ignoreRules = setting.staticIgnoreRules;
+let hosts, ignoreRules;
 
 function staticFilter() {
     return async (ctx, next)=> {
+        const setting = config();
+        hosts = setting.hosts;
+        ignoreRules = setting.staticIgnoreRules;
+
         let ext = path.extname(ctx.req.url).substring(1);
         let myURL = new URL(ctx.request.href);
         let result = matchMockConfig(myURL.hostname, myURL.pathname);

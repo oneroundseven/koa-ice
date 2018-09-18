@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const path = require('path');
 const onError = require('koa-onerror');
-const setting = require('./config')();
+const config = require('./config');
 const blacklist = require('./src/blacklist');
 const staticFilter = require('./src/staticFilter');
 const summersMock = require('summers-mock');
@@ -14,6 +14,7 @@ const { error, debug } = require('./src/logger');
 
 module.exports = (summerCompiler)=> {
     const app = new Koa();
+    const setting = config(summerCompiler);
 
     // error handler
     onError(app);

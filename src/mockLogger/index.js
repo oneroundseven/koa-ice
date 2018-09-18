@@ -7,10 +7,11 @@
 
 const { error } = require('../logger');
 const { visitLogFormat } = require('../util');
-const setting = require('../../config')();
+const config = require('../../config');
 
 function domiAction() {
     return async (ctx, next)=> {
+        const setting = config();
         // 10 seconds over time
         ctx.__domiRenderTimer = setTimeout(function() {
             next();

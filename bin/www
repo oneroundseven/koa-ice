@@ -7,7 +7,7 @@
 const app = require('../app');
 const { warn, error, info, debug } = require('../src/logger');
 const http = require('http');
-const setting = require('../config');
+const config = require('../config');
 
 let startHandle;
 
@@ -83,7 +83,7 @@ module.exports = {
         }
 
         startHandle = callback;
-        localPort = normalizePort(port || setting(summersCompiler).port || '3000');
+        localPort = normalizePort(port || config().port || '3000');
 
         /**
          * Create HTTP server.

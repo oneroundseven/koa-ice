@@ -21,6 +21,10 @@ function initialize(summerCompiler) {
         return settings;
     }
 
+    if (!summerCompiler) {
+        return settings;
+    }
+
     // override default setting
     let config_dir = process.env.NODE_CONFIG_DIR;
     if (config_dir && fs.existsSync(config_dir)) {

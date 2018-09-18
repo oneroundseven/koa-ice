@@ -5,11 +5,13 @@
  * @author oneroundseven@gmail.com
  */
 
-let black_ips = require('../../config')().blackList;
+const config = require('../../config');
 const { warn } = require('../logger');
 
 function blackList() {
     return async (ctx, next)=> {
+
+        let black_ips = config().blackList;
 
         if (black_ips && black_ips.length > 0) {
             let ip = ctx.request.ip;

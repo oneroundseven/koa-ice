@@ -22,13 +22,13 @@ debug.color = 6;
 
 // use log4js as logger 如果环境变量配置了NODE_CONFIG_DIR
 if (process.env.NODE_CONFIG_DIR) {
-    log4js.configure(path.join(process.env.NODE_CONFIG_DIR || "./config", "log4js.json"));
-    logger = log4js.getLogger("summers-ice");
+    //log4js.configure(path.join(process.env.NODE_CONFIG_DIR || "./config", "log4js.json"));
+    //logger = log4js.getLogger("summers-ice");
 }
 
 module.exports = {
-    warn: (content)=> { logger ? logger.warn(content) : warn(content);},
-    info: (content)=> { logger ? logger.info(content) : info(content); },
-    error: (content)=> { logger ? logger.error(content) : error(content); },
-    debug: (content)=> { logger ? logger.debug(content) : debug(content); }
+    warn: (content)=> { logger ? logger.warn(content) : console.log(content);},
+    info: (content)=> { logger ? logger.info(content) : console.log(content); },
+    error: (content)=> { logger ? logger.error(content) : console.log(content); },
+    debug: (content)=> { logger ? logger.debug(content) : console.log(content); }
 };
