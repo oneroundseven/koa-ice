@@ -10,7 +10,7 @@ const staticCache = require('koa-static-cache');
 const staticCompiler = require('./src/staticCompiler');
 const mockViewer = require('summers-mock-viewer');
 const router = require('koa-router')();
-const { error } = require('./src/logger');
+const { error, debug } = require('./src/logger');
 
 module.exports = (summerCompiler)=> {
     const app = new Koa();
@@ -28,6 +28,8 @@ module.exports = (summerCompiler)=> {
     if (!summerCompiler) {
         staticTargetPath = setting.staticPath;
     }
+
+    debug('Static target path:' + staticTargetPath);
 
     if (staticTargetPath) {
         if (!path.isAbsolute(staticTargetPath)) {

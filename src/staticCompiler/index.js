@@ -63,7 +63,7 @@ module.exports = (summerCompiler)=> {
                 }
 
             } catch(err) {
-                error('target for source compile Error:'+ sourcePath + ' ERROR:' + err);
+                error('Target for source compile Error:'+ sourcePath + ' ERROR:' + err);
                 await next();
             }
         } else {
