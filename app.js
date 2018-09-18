@@ -46,7 +46,7 @@ module.exports = (summerCompiler)=> {
 
         if (mockViewer) {
             app.use(staticCache(mockViewer.getViewerPath(), {
-                prefix: '/domi'
+                prefix: '/.mock'
             }));
 
             let swagger = router.get('/swagger/swagger.yaml', mockViewer.swaggerFileHandler);

@@ -5,7 +5,7 @@
  * @author oneroundseven@gmail.com
  */
 
-const { error, warn, info } = require('../logger');
+const { error, warn, debug } = require('../logger');
 const setting = require('../../config')();
 const {URL} = require('url');
 const path = require('path');
@@ -31,9 +31,9 @@ function staticFilter() {
         if (staticMIME.indexOf(ext) !== -1) {
             let loggerStr = visitLogFormat(ctx.request, ctx.response);
             if (ctx.response.status === 404) {
-                warn('STATIC#'+ loggerStr);
+                warn('STATIC '+ loggerStr);
             } else {
-                info('STATIC#'+ loggerStr);
+                debug('STATIC '+ loggerStr);
             }
         }
     }
