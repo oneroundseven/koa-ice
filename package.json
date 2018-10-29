@@ -9,7 +9,7 @@
   "author": "oneroundseven@gmail.com",
   "license": "ISC",
   "devDependencies": {
-    "summers-compile": "0.0.1"
+    "summers-compile": "^0.0.1"
   },
   "dependencies": {
     "colors": "^1.3.2",
@@ -26,8 +26,8 @@
     "koa-views": "^5.2.1",
     "mime-types": "^2.1.20",
     "pug": "^2.0.0-rc.1",
-    "summers-mock": "0.0.1",
+    "summers-mock": "^0.0.1",
     "summers-mock-viewer": "0.0.1",
-    "summers-util": "0.0.1"
+    "summers-util": "^0.0.1"
   }
 }
