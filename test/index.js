@@ -5,12 +5,11 @@
  * @author oneroundseven@gmail.com
  */
 
-const summersCompiler = require('summers-compile');
 const summserICE = require('../bin/www');
+const SummersCompiler = require('summers-compile');
 
-const compile = new summersCompiler();
-compile.watch();
+const compiler = new SummersCompiler();
+compiler.watch();
 
-summserICE.start({
-    summersCompiler: compile
-});
+summserICE.start({ summersCompiler: compiler });
+
