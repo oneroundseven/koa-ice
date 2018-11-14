@@ -31,7 +31,6 @@ module.exports = (summerCompiler)=> {
     }
 
     debug('Static target path:' + staticTargetPath);
-
     if (staticTargetPath) {
         if (!path.isAbsolute(staticTargetPath)) {
             staticTargetPath = path.resolve(__dirname, staticTargetPath);
@@ -46,7 +45,6 @@ module.exports = (summerCompiler)=> {
 
     // summers mock view page
     try {
-
         if (mockViewer) {
             app.use(staticCache(mockViewer.getViewerPath(), {
                 prefix: '/.mock'

@@ -50,13 +50,21 @@ module.exports = (summerCompiler)=> {
                             ctx.body = file;
                         } else {
                             debug('Compile: file not exist, start trigger summerCompiler =>'+ sourcePath);
-                            summerCompiler.watch.addWatchTask('change', sourcePath);
+                            try {
+                                summerCompiler.watch.addWatchTask('change', sourcePath);
+                            } catch(err) {
+                                error('Compile addWatchTask run Error:'+ err);
+                            }
                             ctx.status = 204;
                             ctx.response.res.end();
                         }
                     } else {
                         debug('Compile: file not exist, start trigger summerCompiler =>'+ sourcePath);
-                        summerCompiler.watch.addWatchTask('change', sourcePath);
+                        try {
+                            summerCompiler.watch.addWatchTask('change', sourcePath);
+                        } catch(err) {
+                            error('Compile addWatchTask run Error:'+ err);
+                        }
                         ctx.status = 204;
                         ctx.response.res.end();
                     }

@@ -26,7 +26,7 @@ function staticFilter() {
 
         if ((staticMIME.indexOf(ext) === -1 && result) || ignorePath(myURL.pathname)) {
             ctx.domi = result;
-        } else {
+        } else if (ext && staticMIME.indexOf(ext) !== -1) {
             ctx.__static = true;
         }
         await next();

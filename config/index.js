@@ -12,15 +12,9 @@ const { warn, error, info, debug } = require('../src/logger');
 const SUMMERS_CONFIG_FILE = 'summers-ice-default.js';
 const HOST_TAG = 'host';
 
-let hosts = [];
 let settings = require('./'+ SUMMERS_CONFIG_FILE);
 
 function initialize(summerCompiler) {
-    if (global.__hosts) {
-        settings.hosts = global.__hosts;
-        return settings;
-    }
-
     if (!summerCompiler) {
         return settings;
     }
@@ -55,6 +49,17 @@ function initialize(summerCompiler) {
         settings.staticTargetPath = summerCompiler.options.basic.out;
     }
 
+    // 避免多次轮询本地数据，一次启动只轮询一次，修改配置需要重新启动
+    if (global.__hosts) {
+        settings.hosts = global.__hosts;
+    } else {
+        global.__hosts = settings.hosts = searchLocalConfigHost(settings);
+    }
+    return settings;
+}
+
+let hosts = [];
+function searchLocalConfigHost(settings) {
     let fileDir, directDir, hostContent;
     debug('ScanDir from '+ settings.staticPath.green);
     // 检查执行根目录下是否存在配置文件
@@ -94,11 +99,10 @@ function initialize(summerCompiler) {
             ' VIEWS: '+ path.relative(process.cwd(), host.view).green);
     });
 
-    settings.hosts = hosts;
-    global.__hosts = hosts;
-    return settings;
+    return hosts;
 }
 
+// 序列化自定义配置
 function serialProperties(content, directDir) {
     if (!content || content.length === 0) return null;
 
